@@ -1,0 +1,500 @@
+﻿namespace PromVesClient
+{
+    partial class StaticWeighing
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StaticWeighing));
+            pictureBox1 = new PictureBox();
+            pictureBox2 = new PictureBox();
+            pictureBox3 = new PictureBox();
+            pictureBox4 = new PictureBox();
+            pictureBox5 = new PictureBox();
+            pictureBox6 = new PictureBox();
+            label1 = new Label();
+            pictureBoxStabilityFalse = new PictureBox();
+            pictureBoxStabilityTrue = new PictureBox();
+            lblPlatform1Left = new Label();
+            lblPlatform1Right = new Label();
+            label3 = new Label();
+            comboBoxVagonNumber = new ComboBox();
+            label4 = new Label();
+            cBoxTypeWeighing = new ComboBox();
+            btnSaveWeight = new Button();
+            btnWeighing = new Button();
+            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
+            formsPlot2 = new ScottPlot.WinForms.FormsPlot();
+            label2 = new Label();
+            textBoxShipper = new TextBox();
+            textBoxСonsignee = new TextBox();
+            label5 = new Label();
+            textBoxСargo = new TextBox();
+            label6 = new Label();
+            textBoxInvoiceNumber = new TextBox();
+            label7 = new Label();
+            textBoxInvoiceWeighing = new TextBox();
+            dateTimePickerInvoice = new DateTimePicker();
+            label8 = new Label();
+            label9 = new Label();
+            lblConnectScale = new Label();
+            textBoxTara = new TextBox();
+            label10 = new Label();
+            btnWeighingSecond = new Button();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxStabilityFalse).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxStabilityTrue).BeginInit();
+            SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(1244, 36);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(63, 100);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(1303, 36);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(63, 100);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 1;
+            pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Location = new Point(1363, 36);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(63, 100);
+            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox3.TabIndex = 2;
+            pictureBox3.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            pictureBox4.Location = new Point(1423, 36);
+            pictureBox4.Name = "pictureBox4";
+            pictureBox4.Size = new Size(63, 100);
+            pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox4.TabIndex = 3;
+            pictureBox4.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.Location = new Point(1483, 36);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(63, 100);
+            pictureBox5.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox5.TabIndex = 4;
+            pictureBox5.TabStop = false;
+            // 
+            // pictureBox6
+            // 
+            pictureBox6.Location = new Point(1543, 36);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(63, 100);
+            pictureBox6.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox6.TabIndex = 5;
+            pictureBox6.TabStop = false;
+            pictureBox6.Click += pictureBox6_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.Location = new Point(986, 36);
+            label1.Name = "label1";
+            label1.Size = new Size(109, 21);
+            label1.TabIndex = 6;
+            label1.Text = "Стабильность";
+            label1.Click += label1_Click;
+            // 
+            // pictureBoxStabilityFalse
+            // 
+            pictureBoxStabilityFalse.Image = (Image)resources.GetObject("pictureBoxStabilityFalse.Image");
+            pictureBoxStabilityFalse.Location = new Point(945, 36);
+            pictureBoxStabilityFalse.Name = "pictureBoxStabilityFalse";
+            pictureBoxStabilityFalse.Size = new Size(35, 25);
+            pictureBoxStabilityFalse.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxStabilityFalse.TabIndex = 7;
+            pictureBoxStabilityFalse.TabStop = false;
+            // 
+            // pictureBoxStabilityTrue
+            // 
+            pictureBoxStabilityTrue.Image = (Image)resources.GetObject("pictureBoxStabilityTrue.Image");
+            pictureBoxStabilityTrue.Location = new Point(945, 36);
+            pictureBoxStabilityTrue.Name = "pictureBoxStabilityTrue";
+            pictureBoxStabilityTrue.Size = new Size(35, 25);
+            pictureBoxStabilityTrue.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxStabilityTrue.TabIndex = 8;
+            pictureBoxStabilityTrue.TabStop = false;
+            // 
+            // lblPlatform1Left
+            // 
+            lblPlatform1Left.AutoSize = true;
+            lblPlatform1Left.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            lblPlatform1Left.Location = new Point(45, 524);
+            lblPlatform1Left.Name = "lblPlatform1Left";
+            lblPlatform1Left.Size = new Size(24, 30);
+            lblPlatform1Left.TabIndex = 14;
+            lblPlatform1Left.Text = "0";
+            // 
+            // lblPlatform1Right
+            // 
+            lblPlatform1Right.AutoSize = true;
+            lblPlatform1Right.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            lblPlatform1Right.Location = new Point(650, 524);
+            lblPlatform1Right.Name = "lblPlatform1Right";
+            lblPlatform1Right.Size = new Size(24, 30);
+            lblPlatform1Right.TabIndex = 16;
+            lblPlatform1Right.Text = "0";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label3.Location = new Point(1244, 162);
+            label3.Name = "label3";
+            label3.Size = new Size(110, 21);
+            label3.TabIndex = 18;
+            label3.Text = "Номер вагона";
+            label3.Click += label3_Click;
+            // 
+            // comboBoxVagonNumber
+            // 
+            comboBoxVagonNumber.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            comboBoxVagonNumber.FormattingEnabled = true;
+            comboBoxVagonNumber.Location = new Point(1401, 166);
+            comboBoxVagonNumber.Name = "comboBoxVagonNumber";
+            comboBoxVagonNumber.Size = new Size(200, 25);
+            comboBoxVagonNumber.TabIndex = 19;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label4.Location = new Point(1244, 195);
+            label4.Name = "label4";
+            label4.Size = new Size(135, 21);
+            label4.TabIndex = 20;
+            label4.Text = "Тип взвешивания";
+            // 
+            // cBoxTypeWeighing
+            // 
+            cBoxTypeWeighing.DropDownStyle = ComboBoxStyle.DropDownList;
+            cBoxTypeWeighing.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            cBoxTypeWeighing.FormattingEnabled = true;
+            cBoxTypeWeighing.Items.AddRange(new object[] { "Тара", "Брутто" });
+            cBoxTypeWeighing.Location = new Point(1401, 199);
+            cBoxTypeWeighing.Name = "cBoxTypeWeighing";
+            cBoxTypeWeighing.Size = new Size(200, 25);
+            cBoxTypeWeighing.TabIndex = 21;
+            cBoxTypeWeighing.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            // 
+            // btnSaveWeight
+            // 
+            btnSaveWeight.Enabled = false;
+            btnSaveWeight.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnSaveWeight.Location = new Point(1244, 435);
+            btnSaveWeight.Name = "btnSaveWeight";
+            btnSaveWeight.Size = new Size(357, 32);
+            btnSaveWeight.TabIndex = 22;
+            btnSaveWeight.Text = "Сохранить вес";
+            btnSaveWeight.UseVisualStyleBackColor = true;
+            btnSaveWeight.Click += btnSaveWeight_Click;
+            // 
+            // btnWeighing
+            // 
+            btnWeighing.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnWeighing.Location = new Point(149, 25);
+            btnWeighing.Name = "btnWeighing";
+            btnWeighing.Size = new Size(321, 32);
+            btnWeighing.TabIndex = 23;
+            btnWeighing.Text = "Начать взвешивание первых весов";
+            btnWeighing.UseVisualStyleBackColor = true;
+            btnWeighing.Click += button2_Click;
+            // 
+            // formsPlot1
+            // 
+            formsPlot1.Location = new Point(3, 99);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new Size(600, 422);
+            formsPlot1.TabIndex = 24;
+            // 
+            // formsPlot2
+            // 
+            formsPlot2.Location = new Point(609, 99);
+            formsPlot2.Name = "formsPlot2";
+            formsPlot2.Size = new Size(600, 422);
+            formsPlot2.TabIndex = 25;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label2.Location = new Point(1244, 257);
+            label2.Name = "label2";
+            label2.Size = new Size(141, 21);
+            label2.TabIndex = 28;
+            label2.Text = "Грузоотправитель";
+            // 
+            // textBoxShipper
+            // 
+            textBoxShipper.Location = new Point(1401, 261);
+            textBoxShipper.Name = "textBoxShipper";
+            textBoxShipper.Size = new Size(200, 23);
+            textBoxShipper.TabIndex = 29;
+            // 
+            // textBoxСonsignee
+            // 
+            textBoxСonsignee.Location = new Point(1401, 290);
+            textBoxСonsignee.Name = "textBoxСonsignee";
+            textBoxСonsignee.Size = new Size(200, 23);
+            textBoxСonsignee.TabIndex = 30;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label5.Location = new Point(1244, 290);
+            label5.Name = "label5";
+            label5.Size = new Size(133, 21);
+            label5.TabIndex = 31;
+            label5.Text = "Грузополучатель";
+            // 
+            // textBoxСargo
+            // 
+            textBoxСargo.Location = new Point(1401, 319);
+            textBoxСargo.Name = "textBoxСargo";
+            textBoxСargo.Size = new Size(200, 23);
+            textBoxСargo.TabIndex = 32;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label6.Location = new Point(1244, 319);
+            label6.Name = "label6";
+            label6.Size = new Size(42, 21);
+            label6.TabIndex = 33;
+            label6.Text = "Груз";
+            // 
+            // textBoxInvoiceNumber
+            // 
+            textBoxInvoiceNumber.Location = new Point(1401, 348);
+            textBoxInvoiceNumber.Name = "textBoxInvoiceNumber";
+            textBoxInvoiceNumber.Size = new Size(200, 23);
+            textBoxInvoiceNumber.TabIndex = 34;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label7.Location = new Point(1244, 348);
+            label7.Name = "label7";
+            label7.Size = new Size(109, 21);
+            label7.TabIndex = 35;
+            label7.Text = "№ накладной";
+            // 
+            // textBoxInvoiceWeighing
+            // 
+            textBoxInvoiceWeighing.Location = new Point(1401, 406);
+            textBoxInvoiceWeighing.Name = "textBoxInvoiceWeighing";
+            textBoxInvoiceWeighing.Size = new Size(200, 23);
+            textBoxInvoiceWeighing.TabIndex = 36;
+            // 
+            // dateTimePickerInvoice
+            // 
+            dateTimePickerInvoice.Location = new Point(1401, 377);
+            dateTimePickerInvoice.Name = "dateTimePickerInvoice";
+            dateTimePickerInvoice.Size = new Size(200, 23);
+            dateTimePickerInvoice.TabIndex = 37;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label8.Location = new Point(1244, 375);
+            label8.Name = "label8";
+            label8.Size = new Size(125, 21);
+            label8.TabIndex = 38;
+            label8.Text = "Дата накладной";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label9.Location = new Point(1244, 404);
+            label9.Name = "label9";
+            label9.Size = new Size(151, 21);
+            label9.TabIndex = 39;
+            label9.Text = "Вес по накладной т.";
+            // 
+            // lblConnectScale
+            // 
+            lblConnectScale.AutoSize = true;
+            lblConnectScale.BackColor = Color.Red;
+            lblConnectScale.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            lblConnectScale.ForeColor = SystemColors.Control;
+            lblConnectScale.Location = new Point(945, 64);
+            lblConnectScale.Name = "lblConnectScale";
+            lblConnectScale.Size = new Size(161, 20);
+            lblConnectScale.TabIndex = 40;
+            lblConnectScale.Text = "Соединение с весами";
+            lblConnectScale.Click += label10_Click;
+            // 
+            // textBoxTara
+            // 
+            textBoxTara.Location = new Point(1401, 230);
+            textBoxTara.Name = "textBoxTara";
+            textBoxTara.Size = new Size(200, 23);
+            textBoxTara.TabIndex = 42;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label10.Location = new Point(1244, 226);
+            label10.Name = "label10";
+            label10.Size = new Size(43, 21);
+            label10.TabIndex = 41;
+            label10.Text = "Тара";
+            // 
+            // btnWeighingSecond
+            // 
+            btnWeighingSecond.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnWeighingSecond.Location = new Point(497, 25);
+            btnWeighingSecond.Name = "btnWeighingSecond";
+            btnWeighingSecond.Size = new Size(321, 32);
+            btnWeighingSecond.TabIndex = 43;
+            btnWeighingSecond.Text = "Начать взвешивание вторых весов";
+            btnWeighingSecond.UseVisualStyleBackColor = true;
+            btnWeighingSecond.Click += btnWeighingSecond_Click;
+            // 
+            // StaticWeighing
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1653, 722);
+            Controls.Add(btnWeighingSecond);
+            Controls.Add(textBoxTara);
+            Controls.Add(label10);
+            Controls.Add(lblConnectScale);
+            Controls.Add(label9);
+            Controls.Add(label8);
+            Controls.Add(dateTimePickerInvoice);
+            Controls.Add(textBoxInvoiceWeighing);
+            Controls.Add(label7);
+            Controls.Add(textBoxInvoiceNumber);
+            Controls.Add(label6);
+            Controls.Add(textBoxСargo);
+            Controls.Add(label5);
+            Controls.Add(textBoxСonsignee);
+            Controls.Add(textBoxShipper);
+            Controls.Add(label2);
+            Controls.Add(formsPlot2);
+            Controls.Add(formsPlot1);
+            Controls.Add(btnWeighing);
+            Controls.Add(btnSaveWeight);
+            Controls.Add(cBoxTypeWeighing);
+            Controls.Add(label4);
+            Controls.Add(comboBoxVagonNumber);
+            Controls.Add(label3);
+            Controls.Add(lblPlatform1Right);
+            Controls.Add(lblPlatform1Left);
+            Controls.Add(pictureBoxStabilityFalse);
+            Controls.Add(label1);
+            Controls.Add(pictureBox4);
+            Controls.Add(pictureBox6);
+            Controls.Add(pictureBox5);
+            Controls.Add(pictureBox3);
+            Controls.Add(pictureBox2);
+            Controls.Add(pictureBox1);
+            Controls.Add(pictureBoxStabilityTrue);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "StaticWeighing";
+            Text = "Статическое взвешивание";
+            Load += StaticWeighing_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxStabilityFalse).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxStabilityTrue).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+
+        private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
+        private PictureBox pictureBox3;
+        private PictureBox pictureBox4;
+        private PictureBox pictureBox5;
+        private PictureBox pictureBox6;
+        private Label label1;
+        private PictureBox pictureBoxStabilityFalse;
+        private PictureBox pictureBoxStabilityTrue;
+        private Label lblPlatform1Left;
+        private Label lblPlatform1Right;
+        private Label label3;
+        private ComboBox comboBoxVagonNumber;
+        private Label label4;
+        private ComboBox cBoxTypeWeighing;
+        private Button btnSaveWeight;
+        private Button btnWeighing;
+        private ScottPlot.WinForms.FormsPlot formsPlot1;
+        private ScottPlot.WinForms.FormsPlot formsPlot2;
+        private Label label2;
+        private TextBox textBoxShipper;
+        private TextBox textBoxСonsignee;
+        private Label label5;
+        private TextBox textBoxСargo;
+        private Label label6;
+        private TextBox textBoxInvoiceNumber;
+        private Label label7;
+        private TextBox textBoxInvoiceWeighing;
+        private DateTimePicker dateTimePickerInvoice;
+        private Label label8;
+        private Label label9;
+        private Label lblConnectScale;
+        private TextBox textBoxTara;
+        private Label label10;
+        private Button btnWeighingSecond;
+    }
+}
