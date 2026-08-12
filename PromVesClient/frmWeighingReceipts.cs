@@ -112,7 +112,7 @@ namespace PromVesClient
                 MessageBox.Show($"Данные не были найдены, причина: {result.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+
             //List <WeighingDto> receipts = new List<WeighingDto>();
             //receipts.Add(dto);
             //dataGridView1.AutoGenerateColumns = false;
@@ -242,6 +242,22 @@ namespace PromVesClient
             dataGridViewСards.Columns["DifferenceSides"].HeaderText = "разница бортов т.";
             dataGridViewСards.Columns["TypeWeighing"].HeaderText = "Тип взвешивания";
 
+            dataGridViewСards.ReadOnly = false;
+
+            // По умолчанию все поля запрещены для редактирования
+            foreach (DataGridViewColumn column in dataGridViewСards.Columns)
+            {
+                column.ReadOnly = true;
+            }
+
+            // Разрешаем редактировать только данные накладной
+            dataGridViewСards.Columns["Shipper"].ReadOnly = false;
+            dataGridViewСards.Columns["Consignee"].ReadOnly = false;
+            dataGridViewСards.Columns["Cargo"].ReadOnly = false;
+            dataGridViewСards.Columns["InvoiceNumber"].ReadOnly = false;
+            dataGridViewСards.Columns["InvoiceDateTime"].ReadOnly = false;
+            dataGridViewСards.Columns["InvoiceWeighing"].ReadOnly = false;
+
 
         }
         //метод нажатия на кнопку для удаления квитанции
@@ -365,7 +381,7 @@ namespace PromVesClient
         {
             if (dataGridViewСards.CurrentRow != null)
             {
-               
+
                 //MessageBox.Show($"Номер строки: {dataGridViewСards.CurrentRow.Index}");
                 DialogResult resultConfirmation = MessageBox.Show(
                 "Вы действительно хотите удалить карточку вагона?",
@@ -447,14 +463,14 @@ namespace PromVesClient
                 }
                 var result = await _excelReportService.CreateReport(ListReceiptExcel, OperatorReceipt);
                 if (result.Success == false)
-                { 
-                    
+                {
+
                 }
                 ListReceiptExcel.Clear();
             }
             else
             {
-                MessageBox.Show("Выберите квитанцию для печати","Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите квитанцию для печати", "Предупрждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             //ReceiptDtoExcel receiptExcel = new ReceiptDtoExcel
             //{
@@ -464,8 +480,134 @@ namespace PromVesClient
             //    NetWeight = "NetWeight4"
             //};
             // ListReceiptExcel.Add(receiptExcel);
-           // ListReceiptExcel.Add(receiptExcel);
-            
+            // ListReceiptExcel.Add(receiptExcel);
+
+        }
+
+        private async void btnSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (cardsList == null || cardsList.Count == 0)
+            {
+                MessageBox.Show(
+                    "Сначала выберите квитанцию.",
+                    "Предупреждение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            // Завершаем редактирование текущей ячейки
+            dataGridViewСards.EndEdit();
+
+            try
+            {
+                // Перебираем строки таблицы
+                for (int i = 0; i < dataGridViewСards.Rows.Count; i++)
+                {
+                    var row = dataGridViewСards.Rows[i];
+
+                    // Получаем соответствующую карточку
+                    var card = cardsList[i];
+
+                    // Изменяем только разрешённые поля
+                    card.Shipper = row.Cells["Shipper"].Value?.ToString();
+                    card.Consignee = row.Cells["Consignee"].Value?.ToString();
+                    card.Cargo = row.Cells["Cargo"].Value?.ToString();
+                    card.InvoiceNumber = row.Cells["InvoiceNumber"].Value?.ToString();
+
+                    // Дата накладной
+                    if (row.Cells["InvoiceDateTime"].Value != null &&
+                        row.Cells["InvoiceDateTime"].Value != DBNull.Value)
+                    {
+                        if (DateTime.TryParse(
+                            row.Cells["InvoiceDateTime"].Value.ToString(),
+                            out DateTime invoiceDate))
+                        {
+                            // PostgreSQL использует timestamp with time zone,
+                            // поэтому перед сохранением указываем UTC
+                            card.InvoiceDateTime = DateTime.SpecifyKind(
+                                invoiceDate,
+                                DateTimeKind.Utc);
+                        }
+                    }
+
+                    // Вес по накладной
+                    if (row.Cells["InvoiceWeighing"].Value != null &&
+                        row.Cells["InvoiceWeighing"].Value != DBNull.Value)
+                    {
+                        if (decimal.TryParse(
+                            row.Cells["InvoiceWeighing"].Value.ToString(),
+                            out decimal invoiceWeight))
+                        {
+                            card.InvoiceWeighing = invoiceWeight;
+                        }
+                    }
+
+                    // Сохраняем изменения в БД
+                    var result = await _receiptsService.UpdateCardInvoiceAsync(card);
+
+                    if (!result.Success)
+                    {
+                        MessageBox.Show(
+                            $"Не удалось сохранить карточку № {i + 1}.\n\n{result.Message}",
+                            "Ошибка сохранения",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+
+                        return;
+                    }
+                }
+
+                MessageBox.Show(
+                    "Изменения успешно сохранены.",
+                    "Сохранение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                // После сохранения заново загружаем данные из БД
+                if (dataGridViewReceipts.CurrentRow != null)
+                {
+                    var receiptId =
+                        receiptList[dataGridViewReceipts.CurrentRow.Index].Id;
+
+                    var result = await _receiptsService.GetCardsAsync(receiptId);
+
+                    if (result.Success)
+                    {
+                        cardsList = result.Data;
+
+                        dataGridViewСards.DataSource = null;
+                        dataGridViewСards.DataSource = cardsList;
+
+                        settingViewTable();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка сохранения изменений квитанции");
+
+                string errorMessage = ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    errorMessage += "\n\nInnerException:\n" +
+                                    ex.InnerException.Message;
+                }
+
+                if (ex.InnerException?.InnerException != null)
+                {
+                    errorMessage += "\n\nInnerException 2:\n" +
+                                    ex.InnerException.InnerException.Message;
+                }
+
+                MessageBox.Show(
+                    "Произошла ошибка при сохранении:\n\n" + errorMessage,
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }
