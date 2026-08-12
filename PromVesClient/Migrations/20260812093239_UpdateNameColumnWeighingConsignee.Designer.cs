@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PromVesClient;
@@ -11,9 +12,11 @@ using PromVesClient;
 namespace PromVesClient.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260812093239_UpdateNameColumnWeighingConsignee")]
+    partial class UpdateNameColumnWeighingConsignee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +118,7 @@ namespace PromVesClient.Migrations
                     b.Property<decimal>("GrossWeight")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime?>("InvoiceDateTime")
+                    b.Property<DateTime?>("InvoiceDataTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("InvoiceNumber")

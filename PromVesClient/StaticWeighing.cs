@@ -460,10 +460,10 @@ namespace PromVesClient
                 GrossWeight = GrossWeight,
                 TypeWeighing = cBoxTypeWeighing.Text,
                 Shipper = textBoxShipper.Text,
-                Сonsignee = textBoxСonsignee.Text,
-                Сargo = textBoxСargo.Text,
+                Consignee = textBoxСonsignee.Text,
+                Cargo = textBoxСargo.Text,
                 InvoiceNumber = textBoxInvoiceNumber.Text,
-                InvoiceDataTime = dateTimePickerInvoice.Value,
+                InvoiceDateTime = dateTimePickerInvoice.Value,
                 InvoiceWeighing = InvoiceWeighing,
                 IdReceipt = IdReceipt
             };

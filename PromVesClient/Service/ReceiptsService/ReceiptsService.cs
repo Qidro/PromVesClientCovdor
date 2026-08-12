@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using static System.Net.WebRequestMethods;
 namespace PromVesClient.Service.ReceiptsService
 {
@@ -14,6 +15,7 @@ namespace PromVesClient.Service.ReceiptsService
     {
         private readonly ILogger<ReceiptsService> _logger;
         private readonly ApplicationDbContext _dbContext;
+        string jsonConfig;
         public ReceiptsService(ILogger<ReceiptsService> logger, ApplicationDbContext dbContext) 
         { 
             _logger = logger;
@@ -123,6 +125,10 @@ namespace PromVesClient.Service.ReceiptsService
                     {
                         Id = r.Id,
                         VagonNumber = r.VagonNumber,
+                        L1 = r.L1,
+                        R1 = r.R1,
+                        L2 = r.L2,
+                        R2 = r.R2,
                         TareWeight = r.TareWeight,
                         GrossWeight = r.GrossWeight,
                         NetWeight = r.NetWeight,
@@ -135,6 +141,12 @@ namespace PromVesClient.Service.ReceiptsService
                         RightSide = r.RightSide,
                         DifferenceSides = r.DifferenceSides,
                         TypeWeighing = r.TypeWeighing,
+                        Shipper = r.Shipper,
+                        Consignee = r.Consignee,
+                        Cargo = r.Cargo,
+                        InvoiceDateTime = r.InvoiceDateTime,
+                        InvoiceNumber = r.InvoiceNumber,
+                        InvoiceWeighing = r.InvoiceWeighing,
                         ReceiptId = IdReceipt
 
                     }).ToListAsync();
@@ -162,6 +174,31 @@ namespace PromVesClient.Service.ReceiptsService
             }
             
         }
+
+        public async Task<ServiceResult<Dictionary<string, bool>>> GetVisibalColumn()
+        {
+            try
+            {
+                jsonConfig =  System.IO.File.ReadAllText("Configuration/ReceiptPrintSettings.json");
+                Dictionary<string, bool>? settings =
+                JsonSerializer.Deserialize<Dictionary<string, bool>>(jsonConfig);
+                return new ServiceResult<Dictionary<string, bool>>
+                {
+                    Success = true,
+                    Data = settings ?? new Dictionary<string, bool>()
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Ошибка чтении файла конфигурации настройки" + ex.Message);
+                return ServiceResult<Dictionary<string, bool>>.Fail("Ошибка чтении файла конфигурации настройки" + ex.Message);
+            }
+            //string json = System.IO.File.ReadAllText("ReceiptPrintSettings.json");
+
+           
+            
+        }
+
         //метод получения квитанций с помощью фильтра
         public async Task<ServiceResult<List<ReceiptDto>>> GetReceiptFilter(SearchReceiptDto filter)
         {

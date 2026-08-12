@@ -112,13 +112,14 @@ namespace PromVesClient
                 MessageBox.Show($"Данные не были найдены, причина: {result.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
             //List <WeighingDto> receipts = new List<WeighingDto>();
             //receipts.Add(dto);
             //dataGridView1.AutoGenerateColumns = false;
-
             //копируем результат запроса в поле
             receiptList = result.Data;
             dataGridViewReceipts.DataSource = result.Data;
+
             //dataGridView2.DataSource = resulet.Data;
             dataGridViewReceipts.Columns["Id"].Visible = false;
             //dataGridView1.Columns["Weighings"].Visible = false;
@@ -193,13 +194,38 @@ namespace PromVesClient
                 }
                 else
                 {
-
+                    MessageBox.Show("Не удалось вывести квитанцию, причина: " + result.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private void settingViewTable()
+        private async void settingViewTable()
         {
+            var resultVisibal = await _receiptsService.GetVisibalColumn();
+            if (resultVisibal.Success == false)
+            {
+                MessageBox.Show($"Данные не были найдены, причина: {resultVisibal.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            foreach (DataGridViewColumn column in dataGridViewСards.Columns)
+            {
+                //MessageBox.Show(
+                //    $"Name: {column.Name}\nHeaderText: {column.HeaderText}");
+            }
+            for (int i = 0; i < resultVisibal.Data.Count; i++)
+            {
+                try
+                {
+                    //MessageBox.Show("пиздец:" + dataGridViewСards.Columns[resultVisibal.Data.ElementAt(i).Key].ToString());
+                    dataGridViewСards.Columns[resultVisibal.Data.ElementAt(i).Key].Visible = resultVisibal.Data.ElementAt(i).Value;
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+
             dataGridViewСards.Columns["Id"].Visible = false;
             dataGridViewСards.Columns["ReceiptId"].Visible = false;
             dataGridViewСards.Columns["VagonNumber"].HeaderText = "Номер вагона";

@@ -131,10 +131,10 @@ namespace PromVesClient.Service.StaticWeighingService
                 DifferenceSides = DifferenceSides,
                 TypeWeighing = dtoWeighing.TypeWeighing,
                 Shipper = dtoWeighing.Shipper,
-                Сonsignee = dtoWeighing.Сonsignee,
-                Сargo = dtoWeighing.Сargo,
+                Consignee = dtoWeighing.Consignee,
+                Cargo = dtoWeighing.Cargo,
                 InvoiceNumber = dtoWeighing.InvoiceNumber,
-                InvoiceDataTime = dtoWeighing.InvoiceDataTime?.ToUniversalTime(),
+                InvoiceDateTime = dtoWeighing.InvoiceDateTime?.ToUniversalTime(),
                 InvoiceWeighing = dtoWeighing.InvoiceWeighing,
                 ReceiptId = dtoWeighing.IdReceipt
             };

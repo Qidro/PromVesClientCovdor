@@ -44,13 +44,13 @@ namespace PromVesClient.Models
         //грузоотправитель
         public string? Shipper { get; set; }
         //грузополучатель
-        public string? Сonsignee { get; set; }
+        public string? Consignee { get; set; }
         //груз
-        public string? Сargo { get; set; }
+        public string? Cargo { get; set; }
         //номер накладной
         public string? InvoiceNumber { get; set; }
         //номер накладной
-        public DateTime? InvoiceDataTime { get; set; }
+        public DateTime? InvoiceDateTime { get; set; }
         //вес по накладной
         public decimal? InvoiceWeighing { get; set; }
         
