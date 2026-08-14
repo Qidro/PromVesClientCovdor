@@ -257,7 +257,9 @@
             Controls.Add(groupBox1);
             Controls.Add(dataGridViewReceipts);
             Controls.Add(btnReportFilter);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "frmWeighingReceipts";
             Text = "Квитанции взвешивания";
             Load += frmWeighingReceipts_Load;

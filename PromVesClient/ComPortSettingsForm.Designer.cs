@@ -612,7 +612,9 @@
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "ComPortSettingsForm";
             Text = "Настройка COM портов";
             Load += ComPortSettingsForm_Load;

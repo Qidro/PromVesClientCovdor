@@ -145,33 +145,21 @@ namespace PromVesClient
             {
                 try
                 {
-                    //_client = new TcpClient();
-                    //подключение локального ip адреса
-                    //IPAddress ipAddress = await _staticWeighingService.GetLocalIPAddressAsync();
-                    //подключение в серверу
-                    //await _client.ConnectAsync(ipAddress, 5002)
-                    //.WaitAsync(TimeSpan.FromSeconds(5));
+                    //поключение к первому серверу по 5002 порту
                     await _tcpService.ConnectAsync(5002);
-                    // _stream = _client.GetStream();
-
-                    // _cts = new CancellationTokenSource();
-
-
-
-                    //_ = _tcpService.ReceiveMessagesAsync(_tcpService.Token);
-                    //для отладки
-                    //MessageBox.Show("Подключено");
-
                     //начали взвешивание - данные можно сохранить
                     btnSaveWeight.Enabled = true;
                     graphTimer.Start();
+                    //создаем Id для квитанции
                     IdReceipt = Guid.NewGuid();
                     btnWeighing.Text = "Закончить взвешивание";
+                    //запрещаем пользователю нажмимать кнопку подключения к другому весовому серверу
                     btnWeighingSecond.Enabled = false;
+                    _logger.LogInformation($"Пользователь {_currentUserService.CurrentUser} подключился к первому весовому серверу");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Ошибка: " + ex.Message.ToString());
+                    _logger.LogError("Ошибка подключения к серверу: " + ex.Message.ToString());
                     //_cts?.Cancel();
 
                     //_stream?.Close();
@@ -201,77 +189,6 @@ namespace PromVesClient
                 btnWeighing.Text = "Начать взвешивание первых весов";
             }
         }
-
-        //получение значения с весов
-        //private async Task ReceiveMessagesAsync(CancellationToken token)
-        //{
-        //    byte[] buffer = new byte[4096];
-
-        //    try
-        //    {
-        //        while (!token.IsCancellationRequested)
-        //        {
-        //            int count = await _stream.ReadAsync(buffer, 0, buffer.Length, token);
-
-        //            if (count == 0)
-        //                break;
-
-        //            string message = Encoding.UTF8.GetString(buffer, 0, count);
-
-        //            string[] parts = message.Split(';');
-        //            for (int i = 0; i < 4; i++)
-        //            {
-        //                cartSideWeights[i] = double.Parse(parts[i]) / 1000;
-        //            }
-        //            lblPlatform1Left.Text = "Платформа 1 левый борт: " + cartSideWeights[0].ToString("F2") + " Т.";
-        //            lblPlatform1Right.Text = "Платформа 1 правый борт: "+cartSideWeights[1].ToString("F2")+" Т.";
-        //            lblPlatform2Left.Text = "Платформа 2 левый борт: " + cartSideWeights[2].ToString("F2") + " Т.";
-        //            lblPlatform2Right.Text = "Платформа 2 правый борт: " + cartSideWeights[3].ToString("F2") + " Т.";
-        //            //вызов метода по вывода значения на табло
-        //            _ = DisplayingValue(cartSideWeights.Sum());
-        //            stable(cartSideWeights.Sum());
-        //           //AddPoint(cartSideWeights[0]);
-        //            //BeginInvoke(() =>
-        //            //{
-        //            //    listBox1.Items.Add(message);
-        //            //    // либо:
-        //            //    // textBox1.AppendText(message + Environment.NewLine);
-        //            //});
-        //        }
-        //    }
-        //    //сервер разорвал соединение
-        //    catch (IOException ex)
-        //    {
-        //        MessageBox.Show("Ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        _logger.LogError(ex, "Ошибка ввода-вывода. Сервер разорвал соединение");
-        //    }
-        //    //ошибка потока/работа с закрытым потоком, обьектом которго больше нет
-        //    catch (ObjectDisposedException ex)
-        //    {
-        //        _logger.LogError(ex, "Попытка считывания закрытого потока");
-        //    }
-        //    //ошибка сокета
-        //    catch (SocketException ex)
-        //    {
-        //        MessageBox.Show("Ошибка", $"Ошибка сокета: {ex.SocketErrorCode}", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        _logger.LogError(ex, "Ошибка сокета");
-        //    }
-        //    catch (OperationCanceledException)
-        //    {
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        BeginInvoke(() =>
-        //        {
-        //            //MessageBox.Show(ex.Message);
-        //        });
-        //        _logger.LogError("Ошибка: " + ex.Message.ToString());
-        //    }
-        //}
-        //private async Task CreateGraphAsync(double coordinatePoint)
-        //{ 
-
-        //}
 
         //событие ошибки
         private async void OnConnectionError(Exception ex)
@@ -561,7 +478,7 @@ namespace PromVesClient
             lblConnectScale.BackColor = Color.Green;
             return true;
         }
-
+        //метод кнопки подключения к второму весовому серверу
         private async void btnWeighingSecond_Click(object sender, EventArgs e)
         {
             if (btnWeighingSecond.Text == "Начать взвешивание вторых весов")
