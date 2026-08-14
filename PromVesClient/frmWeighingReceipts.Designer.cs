@@ -47,6 +47,7 @@
             btnDeleteReceipt = new Button();
             receiptInfoLabel = new Label();
             btnPrintReceipt = new Button();
+            btnSaveChanges = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReceipts).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewСards).BeginInit();
@@ -200,7 +201,7 @@
             btnDeleteCard.BackColor = Color.Red;
             btnDeleteCard.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             btnDeleteCard.ForeColor = SystemColors.ControlLightLight;
-            btnDeleteCard.Location = new Point(1132, 501);
+            btnDeleteCard.Location = new Point(1132, 543);
             btnDeleteCard.Name = "btnDeleteCard";
             btnDeleteCard.Size = new Size(321, 36);
             btnDeleteCard.TabIndex = 6;
@@ -213,7 +214,7 @@
             btnDeleteReceipt.BackColor = Color.Red;
             btnDeleteReceipt.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             btnDeleteReceipt.ForeColor = SystemColors.ControlLightLight;
-            btnDeleteReceipt.Location = new Point(1132, 543);
+            btnDeleteReceipt.Location = new Point(1132, 585);
             btnDeleteReceipt.Name = "btnDeleteReceipt";
             btnDeleteReceipt.Size = new Size(321, 36);
             btnDeleteReceipt.TabIndex = 7;
@@ -242,11 +243,23 @@
             btnPrintReceipt.UseVisualStyleBackColor = true;
             btnPrintReceipt.Click += btnPrintReceipt_Click;
             // 
+            // btnSaveChanges
+            // 
+            btnSaveChanges.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnSaveChanges.Location = new Point(1132, 501);
+            btnSaveChanges.Name = "btnSaveChanges";
+            btnSaveChanges.Size = new Size(321, 36);
+            btnSaveChanges.TabIndex = 11;
+            btnSaveChanges.Text = "Сохранить Изменения";
+            btnSaveChanges.UseVisualStyleBackColor = true;
+            btnSaveChanges.Click += btnSaveChanges_Click;
+            // 
             // frmWeighingReceipts
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1518, 909);
+            Controls.Add(btnSaveChanges);
             Controls.Add(btnPrintReceipt);
             Controls.Add(receiptInfoLabel);
             Controls.Add(btnDeleteReceipt);
@@ -291,5 +304,6 @@
         private TextBox operatorTextBox;
         private Label receiptInfoLabel;
         private Button btnPrintReceipt;
+        private Button btnSaveChanges;
     }
 }

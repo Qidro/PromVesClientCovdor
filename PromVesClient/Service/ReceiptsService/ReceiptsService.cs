@@ -16,8 +16,8 @@ namespace PromVesClient.Service.ReceiptsService
         private readonly ILogger<ReceiptsService> _logger;
         private readonly ApplicationDbContext _dbContext;
         string jsonConfig;
-        public ReceiptsService(ILogger<ReceiptsService> logger, ApplicationDbContext dbContext) 
-        { 
+        public ReceiptsService(ILogger<ReceiptsService> logger, ApplicationDbContext dbContext)
+        {
             _logger = logger;
             _dbContext = dbContext;
         }
@@ -47,7 +47,7 @@ namespace PromVesClient.Service.ReceiptsService
             }
             catch (TimeoutException ex)
             {
-                _logger.LogError("Привышенно время ожидания ответа: "+ ex.Message);
+                _logger.LogError("Привышенно время ожидания ответа: " + ex.Message);
                 return ServiceResult<List<ReceiptDto>>.Fail("БД не отвечает, причина: " + ex.Message);
             }
             catch (NpgsqlException ex)
@@ -172,14 +172,14 @@ namespace PromVesClient.Service.ReceiptsService
                 _logger.LogError("Неизвестная ошибка БД: " + ex.Message);
                 return ServiceResult<List<CardsDto>>.Fail("Неизвестная ошибка БД: " + ex.Message);
             }
-            
+
         }
 
         public async Task<ServiceResult<Dictionary<string, bool>>> GetVisibalColumn()
         {
             try
             {
-                jsonConfig =  System.IO.File.ReadAllText("Configuration/ReceiptPrintSettings.json");
+                jsonConfig = System.IO.File.ReadAllText("Configuration/ReceiptPrintSettings.json");
                 Dictionary<string, bool>? settings =
                 JsonSerializer.Deserialize<Dictionary<string, bool>>(jsonConfig);
                 return new ServiceResult<Dictionary<string, bool>>
@@ -195,14 +195,14 @@ namespace PromVesClient.Service.ReceiptsService
             }
             //string json = System.IO.File.ReadAllText("ReceiptPrintSettings.json");
 
-           
-            
+
+
         }
 
         //метод получения квитанций с помощью фильтра
         public async Task<ServiceResult<List<ReceiptDto>>> GetReceiptFilter(SearchReceiptDto filter)
         {
-            try 
+            try
             {
                 //AsQueryable подчеркивает, что далее запрос будет строиться динамически (добавляться)
                 var query = _dbContext.Receipts.AsQueryable();
@@ -236,7 +236,7 @@ namespace PromVesClient.Service.ReceiptsService
                     .ToListAsync();
 
                 return new ServiceResult<List<ReceiptDto>>
-                {   
+                {
                     Success = true,
                     Data = receipts
                 };
@@ -256,7 +256,7 @@ namespace PromVesClient.Service.ReceiptsService
                 _logger.LogError("Неизвестная ошибка БД: " + ex.Message);
                 return ServiceResult<List<ReceiptDto>>.Fail("Неизвестная ошибка БД: " + ex.Message);
             }
-            
+
         }
 
         public async Task<ServiceResult> deletingCard(Guid IdWeighing)
@@ -305,5 +305,55 @@ namespace PromVesClient.Service.ReceiptsService
             }
         }
 
+
+        // Изменение данных накладной карточки вагона
+        public async Task<ServiceResult> UpdateCardInvoiceAsync(CardsDto card)
+        {
+            try
+            {
+                var weighing = await _dbContext.Weighings.FindAsync(card.Id);
+
+                if (weighing == null)
+                {
+                    return ServiceResult.Fail("Карточка вагона не найдена.");
+                }
+
+                weighing.Shipper = card.Shipper;
+                weighing.Consignee = card.Consignee;
+                weighing.Cargo = card.Cargo;
+                weighing.InvoiceNumber = card.InvoiceNumber;
+                weighing.InvoiceDateTime = card.InvoiceDateTime;
+                weighing.InvoiceWeighing = card.InvoiceWeighing;
+
+                await _dbContext.SaveChangesAsync();
+
+                _logger.LogInformation(
+                    "Данные накладной карточки {Id} успешно изменены",
+                    card.Id);
+
+                return ServiceResult.Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка изменения данных карточки");
+
+                string errorMessage = ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    errorMessage += "\n\nInnerException:\n" +
+                                    ex.InnerException.Message;
+                }
+
+                if (ex.InnerException?.InnerException != null)
+                {
+                    errorMessage += "\n\nInnerException 2:\n" +
+                                    ex.InnerException.InnerException.Message;
+                }
+
+                return ServiceResult.Fail(
+                    "Ошибка сохранения изменений:\n\n" + errorMessage);
+            }
+        }
     }
 }
