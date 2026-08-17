@@ -171,6 +171,7 @@ namespace PromVesClient
             //}
         }
 
+        //метод вывода на экран карточек вагона квитанции
         private async void dataGridViewReceipts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.RowIndex < receiptList.Count)
@@ -243,6 +244,12 @@ namespace PromVesClient
             dataGridViewСards.Columns["RightSide"].HeaderText = "правый борт т.";
             dataGridViewСards.Columns["DifferenceSides"].HeaderText = "разница бортов т.";
             dataGridViewСards.Columns["TypeWeighing"].HeaderText = "Тип взвешивания";
+            dataGridViewСards.Columns["Shipper"].HeaderText = "Грузоотправитель";
+            dataGridViewСards.Columns["Consignee"].HeaderText = "Грузополучатель";
+            dataGridViewСards.Columns["Cargo"].HeaderText = "Груз";
+            dataGridViewСards.Columns["InvoiceNumber"].HeaderText = "Номер накладной";
+            dataGridViewСards.Columns["InvoiceDateTime"].HeaderText = "Номер накладной";
+            dataGridViewСards.Columns["InvoiceWeighing"].HeaderText = "Вес по накладной";
 
             dataGridViewСards.ReadOnly = false;
 
@@ -260,7 +267,7 @@ namespace PromVesClient
             dataGridViewСards.Columns["InvoiceDateTime"].ReadOnly = false;
             dataGridViewСards.Columns["InvoiceWeighing"].ReadOnly = false;
 
-
+            dataGridViewСards.Columns["InvoiceDateTime"].DefaultCellStyle.Format = "dd.MM.yyyy";
         }
         //метод нажатия на кнопку для удаления квитанции
         private async void button4_Click(object sender, EventArgs e)
@@ -328,7 +335,7 @@ namespace PromVesClient
             }
             _logger.LogInformation($"Пользователь {_currentUserService.CurrentUser?.Name} нажал на кнопку сохранения квитанции");
             List<ReceiptDtoExcel> receiptExcel = new();
-
+            //перебираем колекцию
             foreach (var card in cardsList)
             {
                 receiptExcel.Add(new ReceiptDtoExcel
@@ -485,13 +492,14 @@ namespace PromVesClient
             // ListReceiptExcel.Add(receiptExcel);
 
         }
-        //
+        //кнопка сохранения изменений картчоки вагона в БД
         private async void btnSaveChanges_Click(object sender, EventArgs e)
         {
+            //проверка на выбор карточки
             if (cardsList == null || cardsList.Count == 0)
             {
                 MessageBox.Show(
-                    "Сначала выберите квитанцию.",
+                    "Сначала выберите карточку вагона.",
                     "Предупреждение",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -616,7 +624,7 @@ namespace PromVesClient
     private void dataGridViewСards_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             string columnName = dataGridViewСards.Columns[e.ColumnIndex].Name;
-            string value = e.FormattedValue?.ToString().Trim();
+            string value = e.FormattedValue?.ToString().Trim().Replace(',', '.');
 
             // Проверка InvoiceDateTime
             if (columnName == "InvoiceDateTime")
@@ -625,7 +633,7 @@ namespace PromVesClient
                     !DateTime.TryParse(value, out _))
                 {
                     MessageBox.Show(
-                        "Введите корректную дату.\nНапример: 17.08.2026 10:30",
+                        "Введите корректную дату.\nНапример: 17.08.2026",
                         "Ошибка ввода",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);

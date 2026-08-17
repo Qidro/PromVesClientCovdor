@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 using Excel = Microsoft.Office.Interop.Excel;
 namespace PromVesClient.Service.ReceiptsService
 {
@@ -157,8 +158,16 @@ namespace PromVesClient.Service.ReceiptsService
 
                 var ws = workbook.Worksheet(1);
 
-                int row = 3;
+                int row = 1;
+                //получам значение названий колонок 
+                var headersList = await SetHeaders();
+                //записываем название колонок
+                for(int i = 0; headersList.Data.Count() > i; i++)
+                {
+                    ws.Cell(row, i+1).Value = headersList.Data[i];
 
+                }
+                row += 1;
                 foreach (var card in cards)
                 {
                     ws.Cell(row, 1).Value = card.VagonNumber;
@@ -204,6 +213,51 @@ namespace PromVesClient.Service.ReceiptsService
                 _logger.LogError($"Не смогли сохранить квитанцию (отчет), причина: {ex.Message}");
                 return ServiceResult.Fail(ex.Message);
             }
+        }
+        //метод получения вывода значений для первой строки Excel
+        public async Task<ServiceResult<List<string>>> SetHeaders()
+        {
+            try
+            {
+                string json = System.IO.File.ReadAllText("Configuration/ReceiptPrintSettings.json");
+                //десериализуем файл
+                var settings = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+                //слоаврь обьектов
+                var translations = new Dictionary<string, string>
+                {
+                    ["VagonNumber"] = "Номер вагона",
+                    ["L1"] = "Левая сторона 1",
+                    ["R1"] = "Правая сторона 1",
+                    ["L2"] = "Левая сторона 2",
+                    ["R2"] = "Правая сторона 2",
+                    ["TareWeight"] = "Вес тары",
+                    ["GrossWeight"] = "Вес брутто",
+                    ["NetWeight"] = "Вес нетто",
+                    ["LoadCapacity"] = "Грузоподъёмность",
+                    ["LoadDeviation"] = "Отклонение",
+                    ["FirstCart"] = "Первая тележка",
+                    ["SecondCart"] = "Вторая тележка",
+                    ["DifferenceCarts"] = "Разница тележек",
+                    ["LeftSide"] = "Левая сторона",
+                    ["RightSide"] = "Правая сторона",
+                    ["DifferenceSides"] = "Разница сторон",
+                    ["TypeWeighing"] = "Тип взвешивания",
+                    ["Shipper"] = "Грузоотправитель",
+                    ["Consignee"] = "Грузополучатель",
+                    ["Cargo"] = "Груз",
+                    ["InvoiceNumber"] = "Номер накладной",
+                    ["InvoiceDateTime"] = "Дата и время накладной",
+                    ["InvoiceWeighing"] = "Взвешивание по накладной"
+                };
+                var settingVisibaleList = settings.Where(x => x.Value == true).Select(x => translations[x.Key]).ToList();
+                return ServiceResult<List<string>>.Ok(settingVisibaleList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Произошла неизвестная ошибка: "+ ex.Message);
+                return ServiceResult<List<string>>.Fail("Произошла неизвестная ошибка: "+ ex.Message);
+            }
+           
         }
     }
 }
