@@ -38,6 +38,8 @@ namespace PromVesClient
             _logger = logger;
             InitializeComponent();
             dataGridViewСards.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewСards.CellValidating += dataGridViewСards_CellValidating;
+            dataGridViewСards.DataError += dataGridViewСards_DataError;
             this.Load += Form1_Load;
             receiptInfoLabel.Text = "";
             _excelReportService = excelReportService;
@@ -609,5 +611,50 @@ namespace PromVesClient
                     MessageBoxIcon.Error);
             }
         }
+    
+    // проверка на ввод данных в таблицу квитанции
+    private void dataGridViewСards_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            string columnName = dataGridViewСards.Columns[e.ColumnIndex].Name;
+            string value = e.FormattedValue?.ToString().Trim();
+
+            // Проверка InvoiceDateTime
+            if (columnName == "InvoiceDateTime")
+            {
+                if (!string.IsNullOrWhiteSpace(value) &&
+                    !DateTime.TryParse(value, out _))
+                {
+                    MessageBox.Show(
+                        "Введите корректную дату.\nНапример: 17.08.2026 10:30",
+                        "Ошибка ввода",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    e.Cancel = true;
+                }
+            }
+
+            // Проверка InvoiceWeighing
+            if (columnName == "InvoiceWeighing")
+            {
+                if (!string.IsNullOrWhiteSpace(value) &&
+                    !decimal.TryParse(value, out _))
+                {
+                    MessageBox.Show(
+                        "Введите корректный вес.\nНапример: 45,5",
+                        "Ошибка ввода",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    e.Cancel = true;
+                }
+            }
+        }
+        // обработка ошибок при вводе данных в таблицу квитанции, чтобы не выскакивало окно с ошибкой при вводе данных в таблицу квитанции
+        private void dataGridViewСards_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
     }
+
 }
