@@ -369,7 +369,7 @@ namespace PromVesClient
 
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
-            //получаем результат операции по сохранению отчета
+            //получаем результат операции по сохранению отчета 
             var result = await _excelReportService.SaveReport(receiptExcel, dialog.FileName);
             //проверка результата
             if (!result.Success)

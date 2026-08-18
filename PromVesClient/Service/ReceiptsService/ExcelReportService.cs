@@ -16,6 +16,7 @@ namespace PromVesClient.Service.ReceiptsService
         {
             _logger = logger;
         }
+        private List<string> cardList; 
         public async Task<ServiceResult> CreateReport(List<ReceiptDtoExcel> cards, string operatorName)
         {
             try
@@ -155,7 +156,7 @@ namespace PromVesClient.Service.ReceiptsService
                     "CardTemplate.xlsx");
 
                 using var workbook = new XLWorkbook(templatePath);
-
+                //берем первый лист
                 var ws = workbook.Worksheet(1);
 
                 int row = 1;
@@ -168,6 +169,7 @@ namespace PromVesClient.Service.ReceiptsService
 
                 }
                 row += 1;
+                
                 foreach (var card in cards)
                 {
                     ws.Cell(row, 1).Value = card.VagonNumber;
@@ -188,20 +190,32 @@ namespace PromVesClient.Service.ReceiptsService
 
                 if (row > 2)
                 {
-                    // Границы для всех заполненных строк
-                    var range = ws.Range(2, 1, row - 1, 12);
-                    ws.Cell(row, 1).Value = $"Сумма Нетто: {cards[cards.Count - 1].NetWeight} т.";
-                    ws.Cell(row + 1, 1).Value = $"Дата: {DateTime.Today.ToString("dd.MM.yyyy")}";
-                    ws.Cell(row + 2, 1).Value = $"Время: {DateTime.Now:HH:mm:ss}";
+                    // Границы для всех заполненных строк 1 - начальная строка, 2 - начальный столбец, 3 - конечная строка, 4 - конечный столбец
+                    var range = ws.Range(1, 1, row - 1, 12);
+                    //ws.Cell(row, 1).Value = $"Сумма Нетто: {cards[cards.Count - 1].NetWeight} т.";
+                    ws.Cell(row, 1).Value = $"Дата: {DateTime.Today.ToString("dd.MM.yyyy")}";
+                    ws.Cell(row + 1, 1).Value = $"Время: {DateTime.Now:HH:mm:ss}";
                     //ws.Cell(row + 3, 1).Value = $"Оператор: {operatorName}";
 
-                    ws.Cell(row, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 1, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 2, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 3, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 1, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 2, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 3, 1).Style.Font.FontSize = 16;
+                    //ws.dataRange.Style.Font.FontSize = 11;
+
+                    var headerRange = ws.Range(1, 1, 1, headersList.Data.Count);
+
+                    headerRange.Style.Alignment.WrapText = true;
+                    headerRange.Style.Font.FontSize = 12;
+                    headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    ws.Row(1).Height = 30;
+
+
                     range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                     range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-                    range.Style.Alignment.ShrinkToFit = true;
+                    //range.Style.Alignment.ShrinkToFit = true;
                 }
 
                 workbook.SaveAs(savePath);
@@ -219,7 +233,7 @@ namespace PromVesClient.Service.ReceiptsService
         {
             try
             {
-                string json = System.IO.File.ReadAllText("Configuration/ReceiptPrintSettings.json");
+                string json = await File.ReadAllTextAsync("Configuration/ReceiptPrintSettings.json");
                 //десериализуем файл
                 var settings = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
                 //слоаврь обьектов
@@ -251,6 +265,37 @@ namespace PromVesClient.Service.ReceiptsService
                 };
                 var settingVisibaleList = settings.Where(x => x.Value == true).Select(x => translations[x.Key]).ToList();
                 return ServiceResult<List<string>>.Ok(settingVisibaleList);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.LogError("Файл ReceiptPrintSettings.json не найден: " + ex.Message);
+                return ServiceResult<List<string>>.Fail("Файл ReceiptPrintSettings.json не найден: " + ex.Message);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                _logger.LogError("Папка Configuration не найдена: " + ex.Message);
+                return ServiceResult<List<string>>.Fail("Папка Configuration не найдена: " + ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError("Нет прав для чтения файла: " + ex.Message);
+                return ServiceResult<List<string>>.Fail("Нет прав для чтения файла: " + ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError("Некорректный путь: " + ex.Message);
+                return ServiceResult<List<string>>.Fail("Некорректный путь: " + ex.Message);
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError("JSON некорректный или его структура не соответствует ожидаемой: " + ex.Message);
+                return ServiceResult<List<string>>.Fail("JSON некорректный или его структура не соответствует ожидаемой: " + ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, "В словаре переводов отсутствует ключ из JSON.");
+                return ServiceResult<List<string>>.Fail(
+                    "В словаре переводов отсутствует настройка из JSON: " + ex.Message);
             }
             catch (Exception ex)
             {

@@ -24,13 +24,17 @@ namespace PromVesClient
             // see https://aka.ms/applicationconfiguration.
 
             var services = new ServiceCollection();
+            //настройка логгера
             Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.File(
-        "logs/log-.txt",
-        rollingInterval: RollingInterval.Day)
-    .CreateLogger();
-
+             .MinimumLevel.Information()
+             .MinimumLevel.Override(
+                 "Microsoft.EntityFrameworkCore.Database.Command",
+                 Serilog.Events.LogEventLevel.Warning)
+             .WriteTo.File(
+                 "logs/log-.txt",
+                 rollingInterval: RollingInterval.Day)
+             .CreateLogger();
+            //регистрация Log для DI
             services.AddLogging(builder =>
             {
                 builder.ClearProviders();
