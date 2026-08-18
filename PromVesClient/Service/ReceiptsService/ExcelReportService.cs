@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.Extensions.Logging;
 using PromVesClient.DTO;
+using PromVesClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -161,29 +162,31 @@ namespace PromVesClient.Service.ReceiptsService
 
                 int row = 1;
                 //получам значение названий колонок 
-                var headersList = await SetHeaders();
-                //записываем название колонок
-                for(int i = 0; headersList.Data.Count() > i; i++)
-                {
-                    ws.Cell(row, i+1).Value = headersList.Data[i];
+                var headersResult = await SetHeaders();
 
+                if (!headersResult.Success)
+                {
+                    return ServiceResult.Fail(headersResult.Message);
+                }
+
+                //записываем название колонок
+                var columns = headersResult.Data;
+
+                // Заголовки
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    ws.Cell(1, i + 1).Value = columns[i].Header;
                 }
                 row += 1;
-                
+
                 foreach (var card in cards)
                 {
-                    ws.Cell(row, 1).Value = card.VagonNumber;
-                    ws.Cell(row, 2).Value = card.TareWeight;
-                    ws.Cell(row, 3).Value = card.GrossWeight;
-                    ws.Cell(row, 4).Value = card.NetWeight;
-                    ws.Cell(row, 5).Value = card.LoadCapacity;
-                    ws.Cell(row, 6).Value = card.LoadDeviation;
-                    ws.Cell(row, 7).Value = card.FirstCart;
-                    ws.Cell(row, 8).Value = card.SecondCart;
-                    ws.Cell(row, 9).Value = card.DifferenceCarts;
-                    ws.Cell(row, 10).Value = card.LeftSide;
-                    ws.Cell(row, 11).Value = card.RightSide;
-                    ws.Cell(row, 12).Value = card.DifferenceSides;
+                    for (int i = 0; i < columns.Count; i++)
+                    {
+                        var value = GetCardValue(card, columns[i].Key);
+
+                        ws.Cell(row, i + 1).Value = XLCellValue.FromObject(value);
+                    }
 
                     row++;
                 }
@@ -191,7 +194,7 @@ namespace PromVesClient.Service.ReceiptsService
                 if (row > 2)
                 {
                     // Границы для всех заполненных строк 1 - начальная строка, 2 - начальный столбец, 3 - конечная строка, 4 - конечный столбец
-                    var range = ws.Range(1, 1, row - 1, 12);
+                    var range = ws.Range(1, 1, row - 1, headersResult.Data.Count);
                     //ws.Cell(row, 1).Value = $"Сумма Нетто: {cards[cards.Count - 1].NetWeight} т.";
                     ws.Cell(row, 1).Value = $"Дата: {DateTime.Today.ToString("dd.MM.yyyy")}";
                     ws.Cell(row + 1, 1).Value = $"Время: {DateTime.Now:HH:mm:ss}";
@@ -203,18 +206,42 @@ namespace PromVesClient.Service.ReceiptsService
                     //ws.Cell(row + 3, 1).Style.Font.FontSize = 16;
                     //ws.dataRange.Style.Font.FontSize = 11;
 
-                    var headerRange = ws.Range(1, 1, 1, headersList.Data.Count);
+                    var headerRange = ws.Range(1, 1, 1, headersResult.Data.Count);
 
+                    // Основной диапазон
+                    var usedRange = ws.RangeUsed();
+
+                    // Перенос текста внутри ячеек
+                    usedRange.Style.Alignment.WrapText = true;
+
+                    // Вертикальное выравнивание
+                    usedRange.Style.Alignment.Vertical =
+                        XLAlignmentVerticalValues.Center;
+
+                    // Границы
+                    usedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    usedRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                    // Заголовок
+                    headerRange.Style.Font.FontSize = 9;
+                    headerRange.Style.Font.Bold = true;
+
+                    // Перенос текста в заголовках
                     headerRange.Style.Alignment.WrapText = true;
-                    headerRange.Style.Font.FontSize = 12;
-                    headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-                    ws.Row(1).Height = 30;
+                    // Выравнивание заголовков по центру
+                    headerRange.Style.Alignment.Horizontal =
+                        XLAlignmentHorizontalValues.Center;
 
+                    headerRange.Style.Alignment.Vertical =
+                        XLAlignmentVerticalValues.Center;
 
-                    range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                    // Автоподбор ширины колонок
+                    ws.Columns().AdjustToContents();
+
+                    // Вписать лист в одну страницу по ширине
+                    ws.PageSetup.PagesWide = 1;
+                    ws.PageSetup.PagesTall = 0;
                     //range.Style.Alignment.ShrinkToFit = true;
                 }
 
@@ -229,14 +256,22 @@ namespace PromVesClient.Service.ReceiptsService
             }
         }
         //метод получения вывода значений для первой строки Excel
-        public async Task<ServiceResult<List<string>>> SetHeaders()
+        public async Task<ServiceResult<List<ExcelColumn>>> SetHeaders()
         {
             try
             {
-                string json = await File.ReadAllTextAsync("Configuration/ReceiptPrintSettings.json");
-                //десериализуем файл
-                var settings = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
-                //слоаврь обьектов
+                string json = File.ReadAllText(
+            "Configuration/ReceiptPrintSettings.json");
+
+                var settings = JsonSerializer
+                    .Deserialize<Dictionary<string, bool>>(json);
+
+                if (settings == null)
+                {
+                    return ServiceResult<List<ExcelColumn>>
+                        .Fail("Настройки не найдены.");
+                }
+
                 var translations = new Dictionary<string, string>
                 {
                     ["VagonNumber"] = "Номер вагона",
@@ -263,46 +298,89 @@ namespace PromVesClient.Service.ReceiptsService
                     ["InvoiceDateTime"] = "Дата и время накладной",
                     ["InvoiceWeighing"] = "Взвешивание по накладной"
                 };
-                var settingVisibaleList = settings.Where(x => x.Value == true).Select(x => translations[x.Key]).ToList();
-                return ServiceResult<List<string>>.Ok(settingVisibaleList);
+
+                var result = settings
+                    .Where(x => x.Value)
+                    .Select(x => new ExcelColumn
+                    {
+                        Key = x.Key,
+                        Header = translations[x.Key]
+                    })
+                    .ToList();
+
+                return ServiceResult<List<ExcelColumn>>.Ok(result);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.LogError("Файл ReceiptPrintSettings.json не найден: " + ex.Message);
-                return ServiceResult<List<string>>.Fail("Файл ReceiptPrintSettings.json не найден: " + ex.Message);
+                return ServiceResult<List<ExcelColumn>>
+                .Fail("Файл ReceiptPrintSettings.json не найден: " +  ex.Message);
+               // return ServiceResult<List<string>>.Fail("Файл ReceiptPrintSettings.json не найден: " + ex.Message);
             }
             catch (DirectoryNotFoundException ex)
             {
                 _logger.LogError("Папка Configuration не найдена: " + ex.Message);
-                return ServiceResult<List<string>>.Fail("Папка Configuration не найдена: " + ex.Message);
+                return ServiceResult<List<ExcelColumn>>.Fail("Папка Configuration не найдена: " + ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {
                 _logger.LogError("Нет прав для чтения файла: " + ex.Message);
-                return ServiceResult<List<string>>.Fail("Нет прав для чтения файла: " + ex.Message);
+                return ServiceResult<List<ExcelColumn>>.Fail("Нет прав для чтения файла: " + ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.LogError("Некорректный путь: " + ex.Message);
-                return ServiceResult<List<string>>.Fail("Некорректный путь: " + ex.Message);
+                return ServiceResult<List<ExcelColumn>>.Fail("Некорректный путь: " + ex.Message);
             }
             catch (JsonException ex)
             {
                 _logger.LogError("JSON некорректный или его структура не соответствует ожидаемой: " + ex.Message);
-                return ServiceResult<List<string>>.Fail("JSON некорректный или его структура не соответствует ожидаемой: " + ex.Message);
+                return ServiceResult<List<ExcelColumn>>.Fail("JSON некорректный или его структура не соответствует ожидаемой: " + ex.Message);
             }
             catch (KeyNotFoundException ex)
             {
                 _logger.LogError(ex, "В словаре переводов отсутствует ключ из JSON.");
-                return ServiceResult<List<string>>.Fail(
+                return ServiceResult<List<ExcelColumn>>.Fail(
                     "В словаре переводов отсутствует настройка из JSON: " + ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Произошла неизвестная ошибка: "+ ex.Message);
-                return ServiceResult<List<string>>.Fail("Произошла неизвестная ошибка: "+ ex.Message);
+                return ServiceResult<List<ExcelColumn>>
+                .Fail("Произошла неизвестная ошибка: " + ex.Message);
+               // return ServiceResult<List<string>>.Fail("Произошла неизвестная ошибка: "+ ex.Message);
             }
            
+        }
+        private object? GetCardValue(ReceiptDtoExcel card, string propertyName)
+        {
+            return propertyName switch
+            {
+                "VagonNumber" => card.VagonNumber,
+                "L1" => card.L1,
+                "R1" => card.R1,
+                "L2" => card.L2,
+                "R2" => card.R2,
+                "TareWeight" => card.TareWeight,
+                "GrossWeight" => card.GrossWeight,
+                "NetWeight" => card.NetWeight,
+                "LoadCapacity" => card.LoadCapacity,
+                "LoadDeviation" => card.LoadDeviation,
+                "FirstCart" => card.FirstCart,
+                "SecondCart" => card.SecondCart,
+                "DifferenceCarts" => card.DifferenceCarts,
+                "LeftSide" => card.LeftSide,
+                "RightSide" => card.RightSide,
+                "DifferenceSides" => card.DifferenceSides,
+                "TypeWeighing" => card.TypeWeighing,
+                "Shipper" => card.Shipper,
+                "Consignee" => card.Consignee,
+                "Cargo" => card.Cargo,
+                "InvoiceNumber" => card.InvoiceNumber,
+                "InvoiceDateTime" => card.InvoiceDateTime,
+                "InvoiceWeighing" => card.InvoiceWeighing,
+                _ => null
+            };
         }
     }
 }

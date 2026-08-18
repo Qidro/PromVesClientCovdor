@@ -341,21 +341,28 @@ namespace PromVesClient
                 receiptExcel.Add(new ReceiptDtoExcel
                 {
                     VagonNumber = card.VagonNumber,
-
+                    L1 = card.L1,
+                    R1 = card.R1,
+                    L2 = card.L2,
+                    R2 = card.R2,
                     TareWeight = card.TareWeight,
                     GrossWeight = card.GrossWeight,
                     NetWeight = card.NetWeight,
-
                     LoadCapacity = card.LoadCapacity,
                     LoadDeviation = card.LoadDeviation,
-
                     FirstCart = card.FirstCart,
                     SecondCart = card.SecondCart,
                     DifferenceCarts = card.DifferenceCarts,
-
                     LeftSide = card.LeftSide,
                     RightSide = card.RightSide,
-                    DifferenceSides = card.DifferenceSides
+                    DifferenceSides = card.DifferenceSides,
+                    TypeWeighing = card.TypeWeighing,
+                    Shipper = card.Shipper,
+                    Consignee = card.Consignee,
+                    Cargo = card.Cargo,
+                    InvoiceNumber = card.InvoiceNumber,
+                    InvoiceDateTime =  card.InvoiceDateTime?.Date,
+                    InvoiceWeighing = card.InvoiceWeighing
                 });
             }
 
