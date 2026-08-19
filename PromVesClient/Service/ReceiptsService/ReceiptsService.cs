@@ -215,7 +215,9 @@ namespace PromVesClient.Service.ReceiptsService
                 // Оператор
                 if (!string.IsNullOrWhiteSpace(filter.operatorName))
                 {
-                    query = query.Where(o => o.Operator == filter.operatorName);
+                    //переводим в нижний регистр
+                    var operatorName = filter.operatorName.ToLower();
+                    query = query.Where(o => o.Operator.ToLower() == operatorName);
                 }
 
                 // Номер вагона
@@ -224,7 +226,20 @@ namespace PromVesClient.Service.ReceiptsService
                     query = query.Where(r =>
                     r.Weighings.Any(w => w.VagonNumber == filter.vagonNumber));
                 }
-
+                //Груз
+                if (!string.IsNullOrWhiteSpace(filter.cargo))
+                {
+                    //перевод в нижний регистр
+                    var cargo = filter.cargo.ToLower();
+                    query = query.Where(c => c.Weighings.Any(w => w.Cargo.ToLower() == cargo));
+                }
+                //грузоотправитель
+                if (!string.IsNullOrWhiteSpace(filter.shipper))
+                {
+                    var shipper = filter.shipper.ToLower();
+                    query = query.Where(s => s.Weighings.Any(w => w.Shipper.ToLower() == shipper));
+                }
+                //сохраняем все в лист 
                 var receipts = await query
                     .Select(r => new ReceiptDto
                     {

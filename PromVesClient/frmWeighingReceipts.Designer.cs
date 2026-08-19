@@ -48,6 +48,10 @@
             receiptInfoLabel = new Label();
             btnPrintReceipt = new Button();
             btnSaveChanges = new Button();
+            cargoTextBox = new TextBox();
+            cargoCheckBox = new CheckBox();
+            shipperTextBox = new TextBox();
+            shipperСheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReceipts).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewСards).BeginInit();
@@ -79,6 +83,10 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(shipperTextBox);
+            groupBox1.Controls.Add(shipperСheckBox);
+            groupBox1.Controls.Add(cargoTextBox);
+            groupBox1.Controls.Add(cargoCheckBox);
             groupBox1.Controls.Add(operatorTextBox);
             groupBox1.Controls.Add(operatorCheckBox);
             groupBox1.Controls.Add(vagonNumberBox);
@@ -89,22 +97,23 @@
             groupBox1.Controls.Add(dateTimePicker1);
             groupBox1.Location = new Point(1132, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(321, 305);
+            groupBox1.Size = new Size(357, 305);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Фильтр квитанции";
             // 
             // operatorTextBox
             // 
-            operatorTextBox.Location = new Point(125, 140);
+            operatorTextBox.Location = new Point(155, 138);
             operatorTextBox.Name = "operatorTextBox";
             operatorTextBox.Size = new Size(166, 23);
             operatorTextBox.TabIndex = 10;
+            operatorTextBox.TextChanged += operatorTextBox_TextChanged;
             // 
             // operatorCheckBox
             // 
             operatorCheckBox.AutoSize = true;
-            operatorCheckBox.Location = new Point(20, 144);
+            operatorCheckBox.Location = new Point(20, 142);
             operatorCheckBox.Name = "operatorCheckBox";
             operatorCheckBox.Size = new Size(80, 19);
             operatorCheckBox.TabIndex = 8;
@@ -125,14 +134,14 @@
             // 
             // vagonNumberTextBox
             // 
-            vagonNumberTextBox.Location = new Point(125, 104);
+            vagonNumberTextBox.Location = new Point(155, 104);
             vagonNumberTextBox.Name = "vagonNumberTextBox";
             vagonNumberTextBox.Size = new Size(166, 23);
             vagonNumberTextBox.TabIndex = 6;
             // 
             // dateTimePicker2
             // 
-            dateTimePicker2.Location = new Point(125, 64);
+            dateTimePicker2.Location = new Point(155, 64);
             dateTimePicker2.Name = "dateTimePicker2";
             dateTimePicker2.Size = new Size(166, 23);
             dateTimePicker2.TabIndex = 3;
@@ -140,7 +149,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(72, 68);
+            label2.Location = new Point(103, 68);
             label2.Name = "label2";
             label2.Size = new Size(21, 15);
             label2.TabIndex = 2;
@@ -150,7 +159,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(52, 30);
+            label1.Location = new Point(83, 30);
             label1.Name = "label1";
             label1.Size = new Size(41, 15);
             label1.TabIndex = 1;
@@ -159,7 +168,7 @@
             // 
             // dateTimePicker1
             // 
-            dateTimePicker1.Location = new Point(125, 24);
+            dateTimePicker1.Location = new Point(155, 24);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(166, 23);
             dateTimePicker1.TabIndex = 0;
@@ -254,6 +263,40 @@
             btnSaveChanges.UseVisualStyleBackColor = true;
             btnSaveChanges.Click += btnSaveChanges_Click;
             // 
+            // cargoTextBox
+            // 
+            cargoTextBox.Location = new Point(155, 173);
+            cargoTextBox.Name = "cargoTextBox";
+            cargoTextBox.Size = new Size(166, 23);
+            cargoTextBox.TabIndex = 12;
+            // 
+            // cargoCheckBox
+            // 
+            cargoCheckBox.AutoSize = true;
+            cargoCheckBox.Location = new Point(20, 177);
+            cargoCheckBox.Name = "cargoCheckBox";
+            cargoCheckBox.Size = new Size(50, 19);
+            cargoCheckBox.TabIndex = 11;
+            cargoCheckBox.Text = "Груз";
+            cargoCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // shipperTextBox
+            // 
+            shipperTextBox.Location = new Point(155, 209);
+            shipperTextBox.Name = "shipperTextBox";
+            shipperTextBox.Size = new Size(166, 23);
+            shipperTextBox.TabIndex = 14;
+            // 
+            // shipperСheckBox
+            // 
+            shipperСheckBox.AutoSize = true;
+            shipperСheckBox.Location = new Point(20, 213);
+            shipperСheckBox.Name = "shipperСheckBox";
+            shipperСheckBox.Size = new Size(126, 19);
+            shipperСheckBox.TabIndex = 13;
+            shipperСheckBox.Text = "Грузоотправитель";
+            shipperСheckBox.UseVisualStyleBackColor = true;
+            // 
             // frmWeighingReceipts
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -305,5 +348,9 @@
         private Label receiptInfoLabel;
         private Button btnPrintReceipt;
         private Button btnSaveChanges;
+        private TextBox cargoTextBox;
+        private CheckBox cargoCheckBox;
+        private TextBox shipperTextBox;
+        private CheckBox shipperСheckBox;
     }
 }

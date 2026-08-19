@@ -26,8 +26,12 @@ namespace PromVesClient
         private List<CardsDto> cardsList = new();
         private List<ReceiptDtoExcel> ListReceiptExcel = new();
         private string VagonNumber;
-        //Поле для фмльтра
+        //Поле для фильтра (логин оператора)
         private string Operator;
+        //поле для фильтра (груз)
+        private string Cargo;
+        //поле для фильтра (грузоотправитель)
+        private string Shipper;
         //поле для печати квитанции
         private string OperatorReceipt;
         public frmWeighingReceipts(ReceiptsService receiptsService, CurrentUserService currentUserService, ILogger<frmWeighingReceipts> logger, ExcelReportService excelReportService)
@@ -65,13 +69,31 @@ namespace PromVesClient
                     Operator = operatorTextBox.Text;
                 }
             }
+            //проверка на поиск фильтра с грузом
+            if (cargoCheckBox.Checked == true)
+            {
+                if (cargoTextBox.Text != null)
+                {
+                    Cargo = cargoTextBox.Text;
+                }
+            }
+            //проверка на поиск фильтра с грузоотправителем
+            if (shipperСheckBox.Checked == true)
+            {
+                if (shipperTextBox.Text != null)
+                {
+                    Shipper = shipperTextBox.Text;
+                }
+            }
             //заполнение DTO
             SearchReceiptDto searchReceiptDto = new SearchReceiptDto
             {
                 periodStart = dateTimePicker1.Value.ToUniversalTime(),
                 periodEnd = dateTimePicker2.Value.ToUniversalTime(),
                 vagonNumber = VagonNumber,
-                operatorName = Operator
+                operatorName = Operator,
+                cargo = Cargo,
+                shipper = Shipper
             };
             //выполнение запроса на получений квитанций с помощью фильтра
             var result = await _receiptsService.GetReceiptFilter(searchReceiptDto);
@@ -361,7 +383,7 @@ namespace PromVesClient
                     Consignee = card.Consignee,
                     Cargo = card.Cargo,
                     InvoiceNumber = card.InvoiceNumber,
-                    InvoiceDateTime =  card.InvoiceDateTime?.Date,
+                    InvoiceDateTime = card.InvoiceDateTime?.Date,
                     InvoiceWeighing = card.InvoiceWeighing
                 });
             }
@@ -381,7 +403,7 @@ namespace PromVesClient
             //проверка результата
             if (!result.Success)
             {
-                MessageBox.Show(result.Message);
+                MessageBox.Show($"Произошла ошибка сохранения документа: {result.Message}", "Произошла ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -458,29 +480,40 @@ namespace PromVesClient
             {
                 _logger.LogInformation($"Пользователь {_currentUserService.CurrentUser?.Name} нажал кнопку печати квитанции");
                 //перебор данных квитанции для значений DTO
-                foreach (var _cardsList in cardsList)
+                foreach (var card in cardsList)
                 {
                     ReceiptDtoExcel receiptExcel = new ReceiptDtoExcel
                     {
-                        VagonNumber = _cardsList.VagonNumber,
-                        TareWeight = _cardsList.TareWeight,
-                        GrossWeight = _cardsList.GrossWeight,
-                        NetWeight = _cardsList.NetWeight,
-                        LoadCapacity = _cardsList.LoadCapacity,
-                        LoadDeviation = _cardsList.LoadDeviation,
-                        FirstCart = _cardsList.FirstCart,
-                        SecondCart = _cardsList.SecondCart,
-                        DifferenceCarts = _cardsList.DifferenceCarts,
-                        LeftSide = _cardsList.LeftSide,
-                        RightSide = _cardsList.RightSide,
-                        DifferenceSides = _cardsList.DifferenceSides
+                        VagonNumber = card.VagonNumber,
+                        L1 = card.L1,
+                        R1 = card.R1,
+                        L2 = card.L2,
+                        R2 = card.R2,
+                        TareWeight = card.TareWeight,
+                        GrossWeight = card.GrossWeight,
+                        NetWeight = card.NetWeight,
+                        LoadCapacity = card.LoadCapacity,
+                        LoadDeviation = card.LoadDeviation,
+                        FirstCart = card.FirstCart,
+                        SecondCart = card.SecondCart,
+                        DifferenceCarts = card.DifferenceCarts,
+                        LeftSide = card.LeftSide,
+                        RightSide = card.RightSide,
+                        DifferenceSides = card.DifferenceSides,
+                        TypeWeighing = card.TypeWeighing,
+                        Shipper = card.Shipper,
+                        Consignee = card.Consignee,
+                        Cargo = card.Cargo,
+                        InvoiceNumber = card.InvoiceNumber,
+                        InvoiceDateTime = card.InvoiceDateTime?.Date,
+                        InvoiceWeighing = card.InvoiceWeighing
                     };
                     ListReceiptExcel.Add(receiptExcel);
                 }
                 var result = await _excelReportService.CreateReport(ListReceiptExcel, OperatorReceipt);
                 if (result.Success == false)
                 {
-
+                    MessageBox.Show($"Произошла ошибка печати: {result.Message}", "Произошла ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 ListReceiptExcel.Clear();
             }
@@ -626,9 +659,9 @@ namespace PromVesClient
                     MessageBoxIcon.Error);
             }
         }
-    
-    // проверка на ввод данных в таблицу квитанции
-    private void dataGridViewСards_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+
+        // проверка на ввод данных в таблицу квитанции
+        private void dataGridViewСards_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             string columnName = dataGridViewСards.Columns[e.ColumnIndex].Name;
             string value = e.FormattedValue?.ToString().Trim().Replace(',', '.');
@@ -669,6 +702,11 @@ namespace PromVesClient
         private void dataGridViewСards_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
+        }
+
+        private void operatorTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

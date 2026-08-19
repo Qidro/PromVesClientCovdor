@@ -28,42 +28,104 @@ namespace PromVesClient.Service.ReceiptsService
                 {
                     var ws = workbook.Worksheet(1);
 
-                    int row = 3;
-                    //заполнение документа данными квитанции
-                    foreach (var card in cards)
+                    int row = 1;
+                //получам значение названий колонок 
+                var headersResult = await SetHeaders();
+
+                if (!headersResult.Success)
+                {
+                    return ServiceResult.Fail(headersResult.Message);
+                }
+
+                //записываем название колонок
+                var columns = headersResult.Data;
+
+                // Заголовки
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    ws.Cell(1, i + 1).Value = columns[i].Header;
+                }
+                row += 1;
+
+                foreach (var card in cards)
+                {
+                    for (int i = 0; i < columns.Count; i++)
                     {
-                        ws.Cell(row, 1).Value = card.VagonNumber;
-                        ws.Cell(row, 2).Value = card.TareWeight;
-                        ws.Cell(row, 3).Value = card.GrossWeight;
-                        ws.Cell(row, 4).Value = card.NetWeight;
-                        ws.Cell(row, 5).Value = card.LoadCapacity;
-                        ws.Cell(row, 6).Value = card.LoadDeviation;
-                        ws.Cell(row, 7).Value = card.FirstCart;
-                        ws.Cell(row, 8).Value = card.SecondCart;
-                        ws.Cell(row, 9).Value = card.DifferenceCarts;
-                        ws.Cell(row, 10).Value = card.LeftSide;
-                        ws.Cell(row, 11).Value = card.RightSide;
-                        ws.Cell(row, 12).Value = card.DifferenceSides;
-                        row++;
+                        var value = GetCardValue(card, columns[i].Key);
+
+                        ws.Cell(row, i + 1).Value = XLCellValue.FromObject(value);
                     }
 
-                    // Границы для всех заполненных строк
-                    var range = ws.Range(2, 1, row - 1, 12);
-                    //дополнительная информация
-                    ws.Cell(row, 1).Value = $"Сумма Нетто: {cards[cards.Count - 1].NetWeight} т.";
-                    ws.Cell(row + 1, 1).Value = $"Дата: {DateTime.Today.ToString("dd.MM.yyyy")}";
-                    ws.Cell(row + 2, 1).Value = $"Время: {DateTime.Now:HH:mm:ss}";
-                    ws.Cell(row + 3, 1).Value = $"Оператор: {operatorName}";
+                    row++;
+                }
 
-                    ws.Cell(row, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 1, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 2, 1).Style.Font.FontSize = 16;
-                    ws.Cell(row + 3, 1).Style.Font.FontSize = 16;
-                    range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-                    //ws.Columns(1, 4).AdjustToContents();
-                    range.Style.Alignment.ShrinkToFit = true;
-                    workbook.SaveAs(reportPath);
+                if (row > 2)
+                {
+                    // Границы для всех заполненных строк 1 - начальная строка, 2 - начальный столбец, 3 - конечная строка, 4 - конечный столбец
+                    var range = ws.Range(1, 1, row - 1, headersResult.Data.Count);
+                    //ws.Cell(row, 1).Value = $"Сумма Нетто: {cards[cards.Count - 1].NetWeight} т.";
+                    ws.Cell(row, 1).Value = $"Дата: {DateTime.Today.ToString("dd.MM.yyyy")}";
+                    ws.Cell(row + 1, 1).Value = $"Время: {DateTime.Now:HH:mm:ss}";
+                    //ws.Cell(row + 3, 1).Value = $"Оператор: {operatorName}";
+
+                    //ws.Cell(row, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 1, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 2, 1).Style.Font.FontSize = 16;
+                    //ws.Cell(row + 3, 1).Style.Font.FontSize = 16;
+                    //ws.dataRange.Style.Font.FontSize = 11;
+
+                    var headerRange = ws.Range(1, 1, 1, headersResult.Data.Count);
+
+                    // Основной диапазон
+                    var usedRange = ws.RangeUsed();
+
+                    // Перенос текста внутри ячеек
+                    usedRange.Style.Alignment.WrapText = true;
+
+                    // Вертикальное выравнивание
+                    usedRange.Style.Alignment.Vertical =
+                        XLAlignmentVerticalValues.Center;
+
+                    // Границы
+                    usedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    usedRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                    // Убираем границы у последних двух строк
+                    var lastRow = ws.LastRowUsed().RowNumber();
+                    var lastTwoRows = ws.Range(
+                        lastRow - 1,
+                        1,
+                        lastRow,
+                        headersResult.Data.Count
+                    );
+
+                    lastTwoRows.Style.Border.LeftBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.RightBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.TopBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.BottomBorder = XLBorderStyleValues.None;
+                    // Заголовок
+                    headerRange.Style.Font.FontSize = 9;
+                    headerRange.Style.Font.Bold = true;
+
+                    // Перенос текста в заголовках
+                    headerRange.Style.Alignment.WrapText = true;
+
+                    // Выравнивание заголовков по центру
+                    headerRange.Style.Alignment.Horizontal =
+                        XLAlignmentHorizontalValues.Center;
+
+                    headerRange.Style.Alignment.Vertical =
+                        XLAlignmentVerticalValues.Center;
+
+                    // Автоподбор ширины колонок
+                    ws.Columns().AdjustToContents();
+
+                    // Вписать лист в одну страницу по ширине
+                    ws.PageSetup.PagesWide = 1;
+                    ws.PageSetup.PagesTall = 0;
+                    //range.Style.Alignment.ShrinkToFit = true;
+                }
+
+                workbook.SaveAs(reportPath);
                 }
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
@@ -221,7 +283,20 @@ namespace PromVesClient.Service.ReceiptsService
                     // Границы
                     usedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                     usedRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                    // Убираем границы у последних двух строк
+                    var lastRow = ws.LastRowUsed().RowNumber();
 
+                    var lastTwoRows = ws.Range(
+                        lastRow - 1,
+                        1,
+                        lastRow,
+                        headersResult.Data.Count
+                    );
+
+                    lastTwoRows.Style.Border.LeftBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.RightBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.TopBorder = XLBorderStyleValues.None;
+                    lastTwoRows.Style.Border.BottomBorder = XLBorderStyleValues.None;
                     // Заголовок
                     headerRange.Style.Font.FontSize = 9;
                     headerRange.Style.Font.Bold = true;
@@ -260,9 +335,10 @@ namespace PromVesClient.Service.ReceiptsService
         {
             try
             {
+                //считываем текс файла настроек видимости данных
                 string json = File.ReadAllText(
             "Configuration/ReceiptPrintSettings.json");
-
+                //десереализуем его
                 var settings = JsonSerializer
                     .Deserialize<Dictionary<string, bool>>(json);
 
@@ -271,7 +347,7 @@ namespace PromVesClient.Service.ReceiptsService
                     return ServiceResult<List<ExcelColumn>>
                         .Fail("Настройки не найдены.");
                 }
-
+                //словарь данных
                 var translations = new Dictionary<string, string>
                 {
                     ["VagonNumber"] = "Номер вагона",
@@ -298,9 +374,9 @@ namespace PromVesClient.Service.ReceiptsService
                     ["InvoiceDateTime"] = "Дата и время накладной",
                     ["InvoiceWeighing"] = "Взвешивание по накладной"
                 };
-
+                //сохраняем в лист те данные, которые имеют тип true
                 var result = settings
-                    .Where(x => x.Value)
+                    .Where(x => x.Value) //аналогия с  x.Value == true
                     .Select(x => new ExcelColumn
                     {
                         Key = x.Key,
