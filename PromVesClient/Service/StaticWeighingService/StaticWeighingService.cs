@@ -81,8 +81,8 @@ namespace PromVesClient.Service.StaticWeighingService
                     //вычесление нетто, если есть Тара и сохраняем Брутто в текущую запись
                     if (dtoWeighing.TareWeight != 0 && lastWeighing.GrossWeight != 0)
                     {
-                        NetWeight =  Math.Round(lastWeighing.GrossWeight - dtoWeighing.TareWeight, 2,
-                        MidpointRounding.AwayFromZero); 
+                        NetWeight = Math.Round(lastWeighing.GrossWeight - dtoWeighing.TareWeight, 2,
+                        MidpointRounding.AwayFromZero);
                         dtoWeighing.GrossWeight = lastWeighing.GrossWeight;
                     }
                     //вычесление нетто, если есть Брутто и сохраняем Тару в текущую запись
@@ -95,6 +95,17 @@ namespace PromVesClient.Service.StaticWeighingService
                         dtoWeighing.TareWeight = lastWeighing.TareWeight;
                     }
                 }
+                else if(dtoWeighing.TypeWeighing != "Тара")  //если не взвешивают тару, то проверяем по ссправочнику
+                {
+                    //если в других квитанциях нет нужного вагона с тарой/брутто, то ищем его в известных вагонах и получаем тару 
+                    var query = await _dbContext.Wagons.Where(w => w.Number == dtoWeighing.VagonNumber).FirstOrDefaultAsync();
+                    if (query != null)
+                    {
+                        //записываем тару
+                        dtoWeighing.TareWeight = query.TareWeight; 
+                    }
+                }
+
             } 
             catch (InvalidOperationException ex)
             {
