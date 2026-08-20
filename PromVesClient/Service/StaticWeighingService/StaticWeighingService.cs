@@ -98,11 +98,12 @@ namespace PromVesClient.Service.StaticWeighingService
                 else if(dtoWeighing.TypeWeighing != "Тара")  //если не взвешивают тару, то проверяем по ссправочнику
                 {
                     //если в других квитанциях нет нужного вагона с тарой/брутто, то ищем его в известных вагонах и получаем тару 
-                    var query = await _dbContext.Wagons.Where(w => w.Number == dtoWeighing.VagonNumber).FirstOrDefaultAsync();
+                    var query = await _dbContext.Wagons.Where(w => w.Number == dtoWeighing.VagonNumber && w.IsActive == true).FirstOrDefaultAsync();
                     if (query != null)
                     {
                         //записываем тару
-                        dtoWeighing.TareWeight = query.TareWeight; 
+                        dtoWeighing.TareWeight = query.TareWeight;
+                        NetWeight = dtoWeighing.GrossWeight - query.TareWeight;
                     }
                 }
 

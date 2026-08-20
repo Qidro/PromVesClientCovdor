@@ -61,8 +61,6 @@
             label8 = new Label();
             label9 = new Label();
             lblConnectScale = new Label();
-            textBoxTara = new TextBox();
-            label10 = new Label();
             btnWeighingSecond = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -227,7 +225,7 @@
             // 
             btnSaveWeight.Enabled = false;
             btnSaveWeight.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            btnSaveWeight.Location = new Point(1244, 435);
+            btnSaveWeight.Location = new Point(1244, 406);
             btnSaveWeight.Name = "btnSaveWeight";
             btnSaveWeight.Size = new Size(357, 32);
             btnSaveWeight.TabIndex = 22;
@@ -264,7 +262,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label2.Location = new Point(1244, 257);
+            label2.Location = new Point(1244, 228);
             label2.Name = "label2";
             label2.Size = new Size(141, 21);
             label2.TabIndex = 28;
@@ -272,14 +270,14 @@
             // 
             // textBoxShipper
             // 
-            textBoxShipper.Location = new Point(1401, 261);
+            textBoxShipper.Location = new Point(1401, 232);
             textBoxShipper.Name = "textBoxShipper";
             textBoxShipper.Size = new Size(200, 23);
             textBoxShipper.TabIndex = 29;
             // 
             // textBoxСonsignee
             // 
-            textBoxСonsignee.Location = new Point(1401, 290);
+            textBoxСonsignee.Location = new Point(1401, 261);
             textBoxСonsignee.Name = "textBoxСonsignee";
             textBoxСonsignee.Size = new Size(200, 23);
             textBoxСonsignee.TabIndex = 30;
@@ -288,7 +286,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label5.Location = new Point(1244, 290);
+            label5.Location = new Point(1244, 261);
             label5.Name = "label5";
             label5.Size = new Size(133, 21);
             label5.TabIndex = 31;
@@ -296,7 +294,7 @@
             // 
             // textBoxСargo
             // 
-            textBoxСargo.Location = new Point(1401, 319);
+            textBoxСargo.Location = new Point(1401, 290);
             textBoxСargo.Name = "textBoxСargo";
             textBoxСargo.Size = new Size(200, 23);
             textBoxСargo.TabIndex = 32;
@@ -305,7 +303,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label6.Location = new Point(1244, 319);
+            label6.Location = new Point(1244, 290);
             label6.Name = "label6";
             label6.Size = new Size(42, 21);
             label6.TabIndex = 33;
@@ -313,7 +311,7 @@
             // 
             // textBoxInvoiceNumber
             // 
-            textBoxInvoiceNumber.Location = new Point(1401, 348);
+            textBoxInvoiceNumber.Location = new Point(1401, 319);
             textBoxInvoiceNumber.Name = "textBoxInvoiceNumber";
             textBoxInvoiceNumber.Size = new Size(200, 23);
             textBoxInvoiceNumber.TabIndex = 34;
@@ -322,7 +320,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label7.Location = new Point(1244, 348);
+            label7.Location = new Point(1244, 319);
             label7.Name = "label7";
             label7.Size = new Size(109, 21);
             label7.TabIndex = 35;
@@ -330,14 +328,14 @@
             // 
             // textBoxInvoiceWeighing
             // 
-            textBoxInvoiceWeighing.Location = new Point(1401, 406);
+            textBoxInvoiceWeighing.Location = new Point(1401, 377);
             textBoxInvoiceWeighing.Name = "textBoxInvoiceWeighing";
             textBoxInvoiceWeighing.Size = new Size(200, 23);
             textBoxInvoiceWeighing.TabIndex = 36;
             // 
             // dateTimePickerInvoice
             // 
-            dateTimePickerInvoice.Location = new Point(1401, 377);
+            dateTimePickerInvoice.Location = new Point(1401, 348);
             dateTimePickerInvoice.Name = "dateTimePickerInvoice";
             dateTimePickerInvoice.Size = new Size(200, 23);
             dateTimePickerInvoice.TabIndex = 37;
@@ -346,7 +344,7 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label8.Location = new Point(1244, 375);
+            label8.Location = new Point(1244, 346);
             label8.Name = "label8";
             label8.Size = new Size(125, 21);
             label8.TabIndex = 38;
@@ -356,7 +354,7 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label9.Location = new Point(1244, 404);
+            label9.Location = new Point(1244, 375);
             label9.Name = "label9";
             label9.Size = new Size(151, 21);
             label9.TabIndex = 39;
@@ -375,23 +373,6 @@
             lblConnectScale.Text = "Соединение с весами";
             lblConnectScale.Click += label10_Click;
             // 
-            // textBoxTara
-            // 
-            textBoxTara.Location = new Point(1401, 230);
-            textBoxTara.Name = "textBoxTara";
-            textBoxTara.Size = new Size(200, 23);
-            textBoxTara.TabIndex = 42;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label10.Location = new Point(1244, 226);
-            label10.Name = "label10";
-            label10.Size = new Size(43, 21);
-            label10.TabIndex = 41;
-            label10.Text = "Тара";
-            // 
             // btnWeighingSecond
             // 
             btnWeighingSecond.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -409,8 +390,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1653, 722);
             Controls.Add(btnWeighingSecond);
-            Controls.Add(textBoxTara);
-            Controls.Add(label10);
             Controls.Add(lblConnectScale);
             Controls.Add(label9);
             Controls.Add(label8);
@@ -495,8 +474,6 @@
         private Label label8;
         private Label label9;
         private Label lblConnectScale;
-        private TextBox textBoxTara;
-        private Label label10;
         private Button btnWeighingSecond;
     }
 }

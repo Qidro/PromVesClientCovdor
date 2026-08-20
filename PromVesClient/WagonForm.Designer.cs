@@ -39,6 +39,7 @@
             colListStatus = new DataGridViewTextBoxColumn();
             btnCreate = new Button();
             btnChangeStatus = new Button();
+            btnDeleate = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvWagon).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvWagonList).BeginInit();
             SuspendLayout();
@@ -110,7 +111,7 @@
             // 
             // btnChangeStatus
             // 
-            btnChangeStatus.Location = new Point(279, 129);
+            btnChangeStatus.Location = new Point(117, 129);
             btnChangeStatus.Name = "btnChangeStatus";
             btnChangeStatus.Size = new Size(192, 50);
             btnChangeStatus.TabIndex = 4;
@@ -118,11 +119,22 @@
             btnChangeStatus.UseVisualStyleBackColor = true;
             btnChangeStatus.Click += btnChangeStatus_Click;
             // 
+            // btnDeleate
+            // 
+            btnDeleate.Location = new Point(315, 129);
+            btnDeleate.Name = "btnDeleate";
+            btnDeleate.Size = new Size(156, 50);
+            btnDeleate.TabIndex = 5;
+            btnDeleate.Text = "Удалить вагон";
+            btnDeleate.UseVisualStyleBackColor = true;
+            btnDeleate.Click += btnDeleate_Click;
+            // 
             // WagonForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(505, 367);
+            Controls.Add(btnDeleate);
             Controls.Add(btnChangeStatus);
             Controls.Add(btnCreate);
             Controls.Add(dgvWagonList);
@@ -150,5 +162,6 @@
         private DataGridViewTextBoxColumn colListNumber;
         private DataGridViewTextBoxColumn colListTareWeight;
         private DataGridViewTextBoxColumn colListStatus;
+        private Button btnDeleate;
     }
 }

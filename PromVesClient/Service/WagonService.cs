@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PromVesClient.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 
 namespace PromVesClient.Service
@@ -192,9 +193,7 @@ namespace PromVesClient.Service
         }
 
         // Активация / деактивация вагона
-        public async Task<ServiceResult> SetActiveAsync(
-            Guid id,
-            bool isActive)
+        public async Task<ServiceResult> SetActiveAsync (Guid id,bool isActive)
         {
             try
             {
@@ -228,6 +227,49 @@ namespace PromVesClient.Service
                 return ServiceResult.Fail(
                     "Не удалось изменить статус вагона.");
             }
+        }
+        //удаление известного вагона из справочника
+        public async Task<ServiceResult> DeleateWagonAsync(Guid Id)
+        {
+            try
+            {
+                await using var db = await _dbContextFactory.CreateDbContextAsync();
+                //ищим известный вагон
+                var result = await db.Wagons.FindAsync(Id);
+                if (result != null)
+                {
+                    //удаляем его
+                    db.Wagons.Remove(result);
+                    await db.SaveChangesAsync();
+                    return ServiceResult.Ok();
+                }
+                else
+                {
+                    return ServiceResult.Fail("Вагон не найдет");
+                }
+                
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError("Произошла ошибка БД: " + ex.Message);
+                return ServiceResult.Fail("Произошла ошибка БД: " + ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError("Ошибка обновления БД: " + ex.Message);
+                return ServiceResult.Fail("Ошибка обновления БД: " + ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError("Ошибка конфигурации БД: " + ex.Message);
+                return ServiceResult.Fail("Ошибка конфигурации БД: " + ex.Message);
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError("Произошла неизвестная ошибка: " + ex.Message);
+                return ServiceResult.Fail("Произошла неизвестная ошибка: " + ex.Message);
+            }
+          
         }
     }
 }

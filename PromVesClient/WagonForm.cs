@@ -1,4 +1,7 @@
-﻿using PromVesClient.Service;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using PromVesClient.Models;
+using PromVesClient.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -207,6 +210,64 @@ namespace PromVesClient
             var result = await _wagonService.SetActiveAsync(
                 wagonId,
                 isActive);
+
+            if (!result.Success)
+            {
+                MessageBox.Show(
+                    result.Message,
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+
+            // Обновляем список
+            await LoadWagonsAsync();
+        }
+
+        private async void btnDeleate_Click(object sender, EventArgs e)
+        {
+            // Проверяем, выбран ли вагон
+            if (dgvWagonList.SelectedRows.Count == 0)
+            {
+                MessageBox.Show(
+                    "Выберите вагон.",
+                    "Внимание",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+            // Получаем выбранную строку
+            var row = dgvWagonList.SelectedRows[0];
+            // Получаем Id вагона
+            var idValue = row.Cells["colId"].Value;
+
+            if (idValue == null || !Guid.TryParse(idValue.ToString(), out Guid wagonId))
+            {
+                MessageBox.Show(
+                    "Не удалось определить вагон.",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+            var resultBox = MessageBox.Show(
+            "Вы действительно хотите удалить вагон?",
+            "Подтверждение удаления",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (resultBox != DialogResult.Yes)
+            {
+                // Отмена
+                return;
+            }
+            
+            // Меняем статус через сервис
+            var result = await _wagonService.DeleateWagonAsync(wagonId);
 
             if (!result.Success)
             {

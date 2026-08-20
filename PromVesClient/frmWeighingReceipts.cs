@@ -274,7 +274,7 @@ namespace PromVesClient
             dataGridViewСards.Columns["Consignee"].HeaderText = "Грузополучатель";
             dataGridViewСards.Columns["Cargo"].HeaderText = "Груз";
             dataGridViewСards.Columns["InvoiceNumber"].HeaderText = "Номер накладной";
-            dataGridViewСards.Columns["InvoiceDateTime"].HeaderText = "Номер накладной";
+            dataGridViewСards.Columns["InvoiceDateTime"].HeaderText = "Дата накладной";
             dataGridViewСards.Columns["InvoiceWeighing"].HeaderText = "Вес по накладной";
 
             dataGridViewСards.ReadOnly = false;
