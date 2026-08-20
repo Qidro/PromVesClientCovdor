@@ -254,6 +254,10 @@ namespace PromVesClient
             dataGridViewСards.Columns["Id"].Visible = false;
             dataGridViewСards.Columns["ReceiptId"].Visible = false;
             dataGridViewСards.Columns["VagonNumber"].HeaderText = "Номер вагона";
+            dataGridViewСards.Columns["L1"].HeaderText = "Левая сторона 1";
+            dataGridViewСards.Columns["R1"].HeaderText = "Правая сторона 1";
+            dataGridViewСards.Columns["L2"].HeaderText = "Левая сторона 2";
+            dataGridViewСards.Columns["R2"].HeaderText = "Правая сторона 2";
             dataGridViewСards.Columns["TareWeight"].HeaderText = "Тара т.";
             dataGridViewСards.Columns["GrossWeight"].HeaderText = "Брутто т.";
             dataGridViewСards.Columns["NetWeight"].HeaderText = "Нетто т.";
