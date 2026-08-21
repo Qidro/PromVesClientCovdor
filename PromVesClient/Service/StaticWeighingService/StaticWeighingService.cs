@@ -19,7 +19,7 @@ namespace PromVesClient.Service.StaticWeighingService
 
         private readonly ApplicationDbContext _dbContext;
 
-        private const decimal DefaultLoadCapacity = 70;
+        //private const decimal DefaultLoadCapacity = 70;
 
         //private Guid IdReceipt;
         //private decimal Platform1Left { get; set; }
@@ -45,7 +45,7 @@ namespace PromVesClient.Service.StaticWeighingService
             //грузопольемность
             //decimal LoadCapacity = 70;
             //расчет переруза/недогруза
-            decimal LoadDeviation = DefaultLoadCapacity - WeightSum;
+            decimal LoadDeviation;
             //временно Нетто 0
             decimal NetWeight = 0;
             //первая тележка
@@ -106,6 +106,8 @@ namespace PromVesClient.Service.StaticWeighingService
                         NetWeight = dtoWeighing.GrossWeight - query.TareWeight;
                     }
                 }
+                //вычисление грузоподьемности
+                LoadDeviation = dtoWeighing.LoadCapacity - NetWeight;
 
             } 
             catch (InvalidOperationException ex)
@@ -119,8 +121,6 @@ namespace PromVesClient.Service.StaticWeighingService
                 _logger.LogError("Ошибка получения данных: " + ex.Message);
                 return ServiceResult.Fail("Ошибка получения данных: "+ ex.Message);
             }
-            
-
             //записываем в модель данные взвешивания
             var weighingResult = new Weighing
             { 
@@ -133,7 +133,7 @@ namespace PromVesClient.Service.StaticWeighingService
                 TareWeight = dtoWeighing.TareWeight,
                 GrossWeight = dtoWeighing.GrossWeight,
                 NetWeight = NetWeight,
-                LoadCapacity = DefaultLoadCapacity,
+                LoadCapacity = dtoWeighing.LoadCapacity,
                 LoadDeviation = LoadDeviation,
                 FirstCart = FirstCart,
                 SecondCart = SecondCart,

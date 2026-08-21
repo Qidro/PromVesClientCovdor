@@ -56,6 +56,7 @@ namespace PromVesClient
         //поля предназначенные для передачи данных в методы сохранения данных  в БД
         private decimal TareWeight;
         private decimal GrossWeight;
+        private decimal LoadCapacity;
         private Guid IdReceipt;
 
         private decimal? InvoiceWeighing;
@@ -365,7 +366,15 @@ namespace PromVesClient
                     return;
                 }
             }
-
+            //проверка поля грузоподьемности
+            string textLoadCapacity = txtLoadCapacity.Text.Trim()
+                .Replace('.', ',');
+            if (!decimal.TryParse(textLoadCapacity.Trim(), out LoadCapacity))
+            {
+                MessageBox.Show("Введите корректное значение грузоподъёмности");
+                return;
+            }
+            LoadCapacity = Math.Round(LoadCapacity, 2);
             var resultt = await _staticWeighingService.saveReceiptAsync(IdReceipt, "Статическое взвешивание", _currentUserService.CurrentUser.Name);
             WeighingDto dto = new WeighingDto
             {
@@ -377,6 +386,7 @@ namespace PromVesClient
                 TareWeight = TareWeight,
                 GrossWeight = GrossWeight,
                 TypeWeighing = cBoxTypeWeighing.Text,
+                LoadCapacity = LoadCapacity,
                 Shipper = textBoxShipper.Text,
                 Consignee = textBoxСonsignee.Text,
                 Cargo = textBoxСargo.Text,

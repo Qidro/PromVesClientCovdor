@@ -87,11 +87,14 @@ namespace PromVesClient
 
             // Получаем значения из верхнего DataGridView
             var number = dgvWagon.Rows[0].Cells["colNumber"].Value?.ToString()?.Trim();
-
-            if (string.IsNullOrWhiteSpace(number))
+            //if (number.Length != 8)
+            //{ 
+                
+            //}
+            if (string.IsNullOrWhiteSpace(number) || number.Length != 8)
             {
                 MessageBox.Show(
-                    "Введите номер вагона.",
+                    "Введите корректный номер вагона.",
                     "Ошибка",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -107,7 +110,7 @@ namespace PromVesClient
                 .Value;
 
             if (tareValue == null ||
-                !decimal.TryParse(tareValue.ToString(), out tareWeight))
+                !decimal.TryParse(tareValue.ToString().Replace('.', ','), out tareWeight))
             {
                 MessageBox.Show(
                     "Введите корректное значение тары.",
@@ -117,7 +120,7 @@ namespace PromVesClient
 
                 return;
             }
-
+            tareWeight = Math.Round(tareWeight, 2);
             // Проверяем, что тара не отрицательная
             if (tareWeight < 0)
             {

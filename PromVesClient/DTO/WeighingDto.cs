@@ -17,6 +17,8 @@ namespace PromVesClient.DTO
         public decimal GrossWeight { get; set; }
 
         public string TypeWeighing { get; set; }
+        public decimal LoadCapacity { get; set; }
+
         //грузоотправитель
         public string? Shipper { get; set; }
         //грузополучатель

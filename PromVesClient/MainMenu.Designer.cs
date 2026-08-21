@@ -35,12 +35,11 @@
             menuStrip1 = new MenuStrip();
             SettingToolStrip = new ToolStripMenuItem();
             r23r23rToolStripMenuItem = new ToolStripMenuItem();
-            r23r23rToolStripMenuItem1 = new ToolStripMenuItem();
             ServiceToolStrip = new ToolStripMenuItem();
             ComSetitem = new ToolStripMenuItem();
             отчетыToolStripMenuItem = new ToolStripMenuItem();
-            label1 = new Label();
             справочникВагоновToolStripMenuItem = new ToolStripMenuItem();
+            label1 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -57,6 +56,7 @@
             // 
             // dynamicWeighing
             // 
+            dynamicWeighing.Enabled = false;
             dynamicWeighing.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             dynamicWeighing.Location = new Point(12, 123);
             dynamicWeighing.Name = "dynamicWeighing";
@@ -87,7 +87,7 @@
             // 
             // SettingToolStrip
             // 
-            SettingToolStrip.DropDownItems.AddRange(new ToolStripItem[] { r23r23rToolStripMenuItem, r23r23rToolStripMenuItem1 });
+            SettingToolStrip.DropDownItems.AddRange(new ToolStripItem[] { r23r23rToolStripMenuItem });
             SettingToolStrip.Name = "SettingToolStrip";
             SettingToolStrip.Size = new Size(79, 20);
             SettingToolStrip.Text = "Настройки";
@@ -99,13 +99,6 @@
             r23r23rToolStripMenuItem.Size = new Size(180, 22);
             r23r23rToolStripMenuItem.Text = "Пользователи";
             r23r23rToolStripMenuItem.Click += r23r23rToolStripMenuItem_Click;
-            // 
-            // r23r23rToolStripMenuItem1
-            // 
-            r23r23rToolStripMenuItem1.Name = "r23r23rToolStripMenuItem1";
-            r23r23rToolStripMenuItem1.Size = new Size(180, 22);
-            r23r23rToolStripMenuItem1.Text = "Отчеты";
-            r23r23rToolStripMenuItem1.Click += r23r23rToolStripMenuItem1_Click;
             // 
             // ServiceToolStrip
             // 
@@ -128,22 +121,22 @@
             отчетыToolStripMenuItem.Text = "Настройки квитанции";
             отчетыToolStripMenuItem.Click += отчетыToolStripMenuItem_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(218, 319);
-            label1.Name = "label1";
-            label1.Size = new Size(38, 15);
-            label1.TabIndex = 4;
-            label1.Text = "label1";
-            label1.Visible = false;
-            // 
             // справочникВагоновToolStripMenuItem
             // 
             справочникВагоновToolStripMenuItem.Name = "справочникВагоновToolStripMenuItem";
             справочникВагоновToolStripMenuItem.Size = new Size(195, 22);
             справочникВагоновToolStripMenuItem.Text = "Справочник вагонов";
             справочникВагоновToolStripMenuItem.Click += справочникВагоновToolStripMenuItem_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(314, 322);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 15);
+            label1.TabIndex = 4;
+            label1.Text = "label1";
+            label1.Visible = false;
             // 
             // MainMenu
             // 
@@ -174,7 +167,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem SettingToolStrip;
         private ToolStripMenuItem r23r23rToolStripMenuItem;
-        private ToolStripMenuItem r23r23rToolStripMenuItem1;
         private ToolStripMenuItem ServiceToolStrip;
         private ToolStripMenuItem ComSetitem;
         private Label label1;

@@ -34,7 +34,8 @@ namespace PromVesClient
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             programVersion.Text = _appInfoService.VersionInfo();
             //programVersion.Text = "Версия: 1.0.0";
-
+            //textBoxPassword.UseSystemPasswordChar = true;
+            //textBoxPassword.PasswordChar = '*';
         }
         
         private void Form1_Load(object sender, EventArgs e)

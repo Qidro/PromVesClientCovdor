@@ -121,12 +121,14 @@
             // 
             // btnDeleate
             // 
+            btnDeleate.BackColor = Color.Red;
+            btnDeleate.ForeColor = Color.White;
             btnDeleate.Location = new Point(315, 129);
             btnDeleate.Name = "btnDeleate";
             btnDeleate.Size = new Size(156, 50);
             btnDeleate.TabIndex = 5;
             btnDeleate.Text = "Удалить вагон";
-            btnDeleate.UseVisualStyleBackColor = true;
+            btnDeleate.UseVisualStyleBackColor = false;
             btnDeleate.Click += btnDeleate_Click;
             // 
             // WagonForm
